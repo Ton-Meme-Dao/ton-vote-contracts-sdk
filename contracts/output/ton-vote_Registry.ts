@@ -1768,31 +1768,32 @@ export function dictValueParserRegistry$Data(): DictionaryValue<Registry$Data> {
     }
 }
 
- type Dao_init_args = {
-    $$type: 'Dao_init_args';
-    registry: Address;
-    daoIndex: bigint;
+ type Registry_init_args = {
+    $$type: 'Registry_init_args';
+    registryId: bigint;
 }
 
-function initDao_init_args(src: Dao_init_args) {
+function initRegistry_init_args(src: Registry_init_args) {
     return (builder: Builder) => {
         const b_0 = builder;
-        b_0.storeAddress(src.registry);
-        b_0.storeInt(src.daoIndex, 257);
+        b_0.storeInt(src.registryId, 257);
     };
 }
 
-async function Dao_init(registry: Address, daoIndex: bigint) {
-    // Fixed: Cell.fromHex does not exist, use Cell.fromBoc(Buffer.from(..., 'hex'))[0]
-    const __code = Cell.fromBoc(Buffer.from('b5ee9c7241020c0100038500022cff008e88f4a413f4bcf2c80bed53208e8130e1ed43d90103026fa64bc57b51343480006386be903e903e9034c7f500743e9034cfcc0409840944090408db05a3a2fe9020404075c01640b44078b6cf1b19a00402000c54745354745304de01d072d721d200d200fa4021103450666f04f86102f862ed44d0d200018e1afa40fa40fa40d31fd401d0fa40d33f3010261025102410236c168e8bfa40810101d7005902d101e207925f07e005d70d1ff2e082218210ecb876ebbae302218210c2b41d43bae302218210d0e3be76ba0405060700ee8d08600000000000000000000000000000000000000000000000000000000000000000048d08600000000000000000000000000000000000000000000000000000000000000000048d086000000000000000000000000000000000000000000000000000000000000000000441401382238d7ea4c6800000c43132343403fa40fa40fa40d33f30810ba18d086000000000000000000000000000000000000000000000000000000000000000000416c70515f2f481114df84227c705f2f410254403c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54005a31fa403081114df8425006c70515f2f410355512c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed5403fa8e2d316c12fa403081114df84225c705f2f410354143c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54e0218210da2f907fba8e2d313504fa403081114df84225c705f2f410354403c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54e0218210f4f3a602bae3022182106a11c484bae3020108090b005e313605d33f308200cab5f84224c705f2f41035443012c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed5401e031810101d700f404f404f404810101d700fa40d20055603781114df8422cc705917f95f8422ac705e2f2f48200eb0df8416f24135f032ebef2f45505c8cf8580ca00cf8440ce01fa028069cf40025c6e016eb0935bcf819d58cf8680cf8480f400f400cf81e2f400c901fb00103555120a0032c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed5400c68210946a98b6ba8e54d33f30c8018210aff90f5758cb1fcb3fc910461035443012f84270705003804201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54e05f07f2c082ff52090b', 'hex'))[0];
+async function Registry_init(registryId: bigint) {
+    let parsed = Cell.fromBoc(Buffer.from('b5ee9c7241022101000854000228ff008e88f4a413f4bcf2c80bed5320e303ed43d90109020271020401afbd78af6a268690000cf698fe98ffd20699fe99faaa0360ac71cc08080eb800080e8b846843000000000000000000000000000000000000000000000000000000000000000000241081dcd6500410802faf080716d9e362ac03000a5474325343020120050701afb8181ed44d0d200019ed31fd31ffa40d33fd33f55406c158e39810101d7000101d1708d086000000000000000000000000000000000000000000000000000000000000000000482103b9aca00821005f5e100e2db3c6c5180600022301b3b81c8ed44d0d200019ed31fd31ffa40d33fd33f55406c158e39810101d7000101d1708d086000000000000000000000000000000000000000000000000000000000000000000482103b9aca00821005f5e100e25504db3c6c51808015edb3c705920f90022f9005ad76501d76582020134c8cb17cb0fcb0fcbffcbff71f90400c87401cb0212ca07cbffc9d00e01f83001d072d721d200d200fa4021103450666f04f86102f862ed44d0d200019ed31fd31ffa40d33fd33f55406c158e39810101d7000101d1708d086000000000000000000000000000000000000000000000000000000000000000000482103b9aca00821005f5e100e206925f06e004d70d1ff2e082218210c95b9b640a04febae302218210a8969119ba8e29313403d33f308111f8f84225c705f2f4440302c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed54e021820b964bceba8e29313504d33f308200daccf84226c705f2f44430c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed54e02182105815bd86bae302218210c6d673cabae302010b0d1f2002fe31fa40fa40fa40308200b500f8416f24135f0328bef2f482008a4bf84225c705f2f42410560447135086db3c5c705920f90022f9005ad76501d76582020134c8cb17cb0fcb0fcbffcbff71f90400c87401cb0212ca07cbffc9d0707050ab804051d6c855308210ecb876eb5005cb1f13cecececb3fc9161059104a103b50b20e0c009c1036453304c8cf8580ca00cf8440ce01fa028069cf40025c6e016eb0935bcf819d58cf8680cf8480f400f400cf81e2f400c901fb00a44443c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed5404fc31d31fd33f308121c5f84224c705f2f4104510344366db3c705920f90022f9005ad76501d76582020134c8cb17cb0fcb0fcbffcbff71f90400c87401cb0212ca07cbffc9d07070804009c8018210f4f3a60258cb1fcb3fc91034413019146d50436d5033c8cf8580ca00cf8440ce01fa028069cf40025c6e016eb08a8ae20e1c1d1e010af82801db3c0f011e88c87001ca005a02ce810101cf00c910022cff008e88f4a413f4bcf2c80bed53208e8130e1ed43d91113026fa64bc57b51343480006386be903e903e9034c7f500743e9034cfcc0409840944090408db05a3a2fe9020404075c01640b44078b6cf1b19a01412000c54745354745304de01d072d721d200d200fa4021103450666f04f86102f862ed44d0d200018e1afa40fa40fa40d31fd401d0fa40d33f3010261025102410236c168e8bfa40810101d7005902d101e207925f07e005d70d1ff2e082218210ecb876ebbae302218210c2b41d43bae302218210d0e3be76ba1415161700ee8d08600000000000000000000000000000000000000000000000000000000000000000048d08600000000000000000000000000000000000000000000000000000000000000000048d086000000000000000000000000000000000000000000000000000000000000000000441401382238d7ea4c6800000c43132343403fa40fa40fa40d33f30810ba18d086000000000000000000000000000000000000000000000000000000000000000000416c70515f2f481114df84227c705f2f410254403c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54005a31fa403081114df8425006c70515f2f410355512c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed5403fa8e2d316c12fa403081114df84225c705f2f410354143c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54e0218210da2f907fba8e2d313504fa403081114df84225c705f2f410354403c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54e0218210f4f3a602bae3022182106a11c484bae3020118191b005e313605d33f308200cab5f84224c705f2f41035443012c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed5401e031810101d700f404f404f404810101d700fa40d20055603781114df8422cc705917f95f8422ac705e2f2f48200eb0df8416f24135f032ebef2f45505c8cf8580ca00cf8440ce01fa028069cf40025c6e016eb0935bcf819d58cf8680cf8480f400f400cf81e2f400c901fb00103555121a0032c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed5400c68210946a98b6ba8e54d33f30c8018210aff90f5758cb1fcb3fc910461035443012f84270705003804201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54e05f07f2c08200065bcf81001a58cf8680cf8480f400f400cf81003cf400c901fb005503c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed5400a831fa4030815b9cf84223c70592327f8e278d086000000000000000000000000000000000000000000000000000000000000000000413c705e212f2f44034c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed5400ba8210946a98b6ba8e4ed33f30c8018210aff90f5758cb1fcb3fc910354430f84270705003804201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed54e05f06f2c082728de685', 'hex'));
+    if (parsed.length !== 1) {
+        throw new Error("Deserialized more than one cell");
+    }
+    const __code = parsed[0];
     const builder = beginCell();
     builder.storeUint(0, 1);
-    initDao_init_args({ $$type: 'Dao_init_args', registry, daoIndex })(builder);
+    initRegistry_init_args({ $$type: 'Registry_init_args', registryId })(builder);
     const __data = builder.endCell();
     return { code: __code, data: __data };
 }
 
-export const Dao_errors = {
+export const Registry_errors = {
     2: { message: "Stack underflow" },
     3: { message: "Stack overflow" },
     4: { message: "Integer overflow" },
@@ -1841,7 +1842,7 @@ export const Dao_errors = {
     60173: { message: "Below min fee for dao forward message" },
 } as const
 
-export const Dao_errors_backward = {
+export const Registry_errors_backward = {
     "Stack underflow": 2,
     "Stack overflow": 3,
     "Integer overflow": 4,
@@ -1890,7 +1891,7 @@ export const Dao_errors_backward = {
     "Below min fee for dao forward message": 60173,
 } as const
 
-const Dao_types: ABIType[] = [
+const Registry_types: ABIType[] = [
     {"name":"DataSize","header":null,"fields":[{"name":"cells","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bits","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"refs","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
     {"name":"SignedBundle","header":null,"fields":[{"name":"signature","type":{"kind":"simple","type":"fixed-bytes","optional":false,"format":64}},{"name":"signedData","type":{"kind":"simple","type":"slice","optional":false,"format":"remainder"}}]},
     {"name":"StateInit","header":null,"fields":[{"name":"code","type":{"kind":"simple","type":"cell","optional":false}},{"name":"data","type":{"kind":"simple","type":"cell","optional":false}}]},
@@ -1924,7 +1925,7 @@ const Dao_types: ABIType[] = [
     {"name":"Registry$Data","header":null,"fields":[{"name":"registryId","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"nextDaoId","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"admin","type":{"kind":"simple","type":"address","optional":false}},{"name":"deployAndInitDaoFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newDaosfwdMsgFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
 ]
 
-const Dao_opcodes = {
+const Registry_opcodes = {
     "Deploy": 2490013878,
     "DeployOk": 2952335191,
     "FactoryDeploy": 1829761339,
@@ -1944,52 +1945,55 @@ const Dao_opcodes = {
     "DaoInit": 3971512043,
 }
 
-const Dao_getters: ABIGetter[] = [
-    {"name":"state","methodId":77589,"arguments":[],"returnType":{"kind":"simple","type":"DaoContractState","optional":false}},
+const Registry_getters: ABIGetter[] = [
+    {"name":"state","methodId":77589,"arguments":[],"returnType":{"kind":"simple","type":"RegistryContractState","optional":false}},
+    {"name":"nextDaoId","methodId":98689,"arguments":[],"returnType":{"kind":"simple","type":"int","optional":false,"format":257}},
+    {"name":"daoAddress","methodId":115144,"arguments":[{"name":"daoId","type":{"kind":"simple","type":"int","optional":false,"format":257}}],"returnType":{"kind":"simple","type":"address","optional":false}},
 ]
 
-export const Dao_getterMapping: { [key: string]: string } = {
+export const Registry_getterMapping: { [key: string]: string } = {
     'state': 'getState',
+    'nextDaoId': 'getNextDaoId',
+    'daoAddress': 'getDaoAddress',
 }
 
-const Dao_receivers: ABIReceiver[] = [
-    {"receiver":"internal","message":{"kind":"typed","type":"DaoInit"}},
-    {"receiver":"internal","message":{"kind":"typed","type":"SetOwner"}},
-    {"receiver":"internal","message":{"kind":"typed","type":"SetProposalOwner"}},
-    {"receiver":"internal","message":{"kind":"typed","type":"SetMetadata"}},
-    {"receiver":"internal","message":{"kind":"typed","type":"SetFwdMsgFee"}},
-    {"receiver":"internal","message":{"kind":"typed","type":"FwdMsg"}},
+const Registry_receivers: ABIReceiver[] = [
+    {"receiver":"internal","message":{"kind":"typed","type":"DeployAndInitDao"}},
+    {"receiver":"internal","message":{"kind":"typed","type":"SetDeployAndInitDaoFee"}},
+    {"receiver":"internal","message":{"kind":"typed","type":"SetNewDaoFwdMsgFee"}},
+    {"receiver":"internal","message":{"kind":"typed","type":"SendToDaoSetFwdMsgFee"}},
+    {"receiver":"internal","message":{"kind":"typed","type":"SetRegistryAdmin"}},
     {"receiver":"internal","message":{"kind":"typed","type":"Deploy"}},
 ]
 
 
-export class Dao implements Contract {
+export class Registry implements Contract {
     
     public static readonly storageReserve = 0n;
-    public static readonly errors = Dao_errors_backward;
-    public static readonly opcodes = Dao_opcodes;
+    public static readonly errors = Registry_errors_backward;
+    public static readonly opcodes = Registry_opcodes;
     
-    static async init(registry: Address, daoIndex: bigint) {
-        return await Dao_init(registry, daoIndex);
+    static async init(registryId: bigint) {
+        return await Registry_init(registryId);
     }
     
-    static async fromInit(registry: Address, daoIndex: bigint) {
-        const __gen_init = await Dao_init(registry, daoIndex);
+    static async fromInit(registryId: bigint) {
+        const __gen_init = await Registry_init(registryId);
         const address = contractAddress(0, __gen_init);
-        return new Dao(address, __gen_init);
+        return new Registry(address, __gen_init);
     }
     
     static fromAddress(address: Address) {
-        return new Dao(address);
+        return new Registry(address);
     }
     
     readonly address: Address; 
     readonly init?: { code: Cell, data: Cell };
     readonly abi: ContractABI = {
-        types:  Dao_types,
-        getters: Dao_getters,
-        receivers: Dao_receivers,
-        errors: Dao_errors,
+        types:  Registry_types,
+        getters: Registry_getters,
+        receivers: Registry_receivers,
+        errors: Registry_errors,
     };
     
     constructor(address: Address, init?: { code: Cell, data: Cell }) {
@@ -1997,26 +2001,23 @@ export class Dao implements Contract {
         this.init = init;
     }
     
-    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: DaoInit | SetOwner | SetProposalOwner | SetMetadata | SetFwdMsgFee | FwdMsg | Deploy) {
+    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: DeployAndInitDao | SetDeployAndInitDaoFee | SetNewDaoFwdMsgFee | SendToDaoSetFwdMsgFee | SetRegistryAdmin | Deploy) {
         
         let body: Cell | null = null;
-        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'DaoInit') {
-            body = beginCell().store(storeDaoInit(message)).endCell();
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'DeployAndInitDao') {
+            body = beginCell().store(storeDeployAndInitDao(message)).endCell();
         }
-        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SetOwner') {
-            body = beginCell().store(storeSetOwner(message)).endCell();
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SetDeployAndInitDaoFee') {
+            body = beginCell().store(storeSetDeployAndInitDaoFee(message)).endCell();
         }
-        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SetProposalOwner') {
-            body = beginCell().store(storeSetProposalOwner(message)).endCell();
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SetNewDaoFwdMsgFee') {
+            body = beginCell().store(storeSetNewDaoFwdMsgFee(message)).endCell();
         }
-        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SetMetadata') {
-            body = beginCell().store(storeSetMetadata(message)).endCell();
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SendToDaoSetFwdMsgFee') {
+            body = beginCell().store(storeSendToDaoSetFwdMsgFee(message)).endCell();
         }
-        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SetFwdMsgFee') {
-            body = beginCell().store(storeSetFwdMsgFee(message)).endCell();
-        }
-        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'FwdMsg') {
-            body = beginCell().store(storeFwdMsg(message)).endCell();
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SetRegistryAdmin') {
+            body = beginCell().store(storeSetRegistryAdmin(message)).endCell();
         }
         if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'Deploy') {
             body = beginCell().store(storeDeploy(message)).endCell();
@@ -2030,7 +2031,22 @@ export class Dao implements Contract {
     async getState(provider: ContractProvider) {
         const builder = new TupleBuilder();
         const source = (await provider.get('state', builder.build())).stack;
-        const result = loadGetterTupleDaoContractState(source);
+        const result = loadGetterTupleRegistryContractState(source);
+        return result;
+    }
+    
+    async getNextDaoId(provider: ContractProvider) {
+        const builder = new TupleBuilder();
+        const source = (await provider.get('nextDaoId', builder.build())).stack;
+        const result = source.readBigNumber();
+        return result;
+    }
+    
+    async getDaoAddress(provider: ContractProvider, daoId: bigint) {
+        const builder = new TupleBuilder();
+        builder.writeNumber(daoId);
+        const source = (await provider.get('daoAddress', builder.build())).stack;
+        const result = source.readAddress();
         return result;
     }
     
