@@ -1,24 +1,133 @@
-import { 
+import {
     Cell,
-    Slice, 
-    Address, 
-    Builder, 
-    beginCell, 
-    ComputeError, 
-    TupleItem, 
-    TupleReader, 
-    Dictionary, 
-    contractAddress, 
-    ContractProvider, 
-    Sender, 
-    Contract, 
-    ContractABI, 
+    Slice,
+    Address,
+    Builder,
+    beginCell,
+    ComputeError,
+    TupleItem,
+    TupleReader,
+    Dictionary,
+    contractAddress,
+    address,
+    ContractProvider,
+    Sender,
+    Contract,
+    ContractABI,
     ABIType,
     ABIGetter,
     ABIReceiver,
     TupleBuilder,
     DictionaryValue
 } from 'ton-core';
+
+export type DataSize = {
+    $$type: 'DataSize';
+    cells: bigint;
+    bits: bigint;
+    refs: bigint;
+}
+
+export function storeDataSize(src: DataSize) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeInt(src.cells, 257);
+        b_0.storeInt(src.bits, 257);
+        b_0.storeInt(src.refs, 257);
+    };
+}
+
+export function loadDataSize(slice: Slice) {
+    const sc_0 = slice;
+    const _cells = sc_0.loadIntBig(257);
+    const _bits = sc_0.loadIntBig(257);
+    const _refs = sc_0.loadIntBig(257);
+    return { $$type: 'DataSize' as const, cells: _cells, bits: _bits, refs: _refs };
+}
+
+export function loadTupleDataSize(source: TupleReader) {
+    const _cells = source.readBigNumber();
+    const _bits = source.readBigNumber();
+    const _refs = source.readBigNumber();
+    return { $$type: 'DataSize' as const, cells: _cells, bits: _bits, refs: _refs };
+}
+
+export function loadGetterTupleDataSize(source: TupleReader) {
+    const _cells = source.readBigNumber();
+    const _bits = source.readBigNumber();
+    const _refs = source.readBigNumber();
+    return { $$type: 'DataSize' as const, cells: _cells, bits: _bits, refs: _refs };
+}
+
+export function storeTupleDataSize(source: DataSize) {
+    const builder = new TupleBuilder();
+    builder.writeNumber(source.cells);
+    builder.writeNumber(source.bits);
+    builder.writeNumber(source.refs);
+    return builder.build();
+}
+
+export function dictValueParserDataSize(): DictionaryValue<DataSize> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeDataSize(src)).endCell());
+        },
+        parse: (src) => {
+            return loadDataSize(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type SignedBundle = {
+    $$type: 'SignedBundle';
+    signature: Buffer;
+    signedData: Slice;
+}
+
+export function storeSignedBundle(src: SignedBundle) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeBuffer(src.signature);
+        b_0.storeBuilder(src.signedData.asBuilder());
+    };
+}
+
+export function loadSignedBundle(slice: Slice) {
+    const sc_0 = slice;
+    const _signature = sc_0.loadBuffer(64);
+    const _signedData = sc_0;
+    return { $$type: 'SignedBundle' as const, signature: _signature, signedData: _signedData };
+}
+
+export function loadTupleSignedBundle(source: TupleReader) {
+    const _signature = source.readBuffer();
+    const _signedData = source.readCell().asSlice();
+    return { $$type: 'SignedBundle' as const, signature: _signature, signedData: _signedData };
+}
+
+export function loadGetterTupleSignedBundle(source: TupleReader) {
+    const _signature = source.readBuffer();
+    const _signedData = source.readCell().asSlice();
+    return { $$type: 'SignedBundle' as const, signature: _signature, signedData: _signedData };
+}
+
+export function storeTupleSignedBundle(source: SignedBundle) {
+    const builder = new TupleBuilder();
+    builder.writeBuffer(source.signature);
+    builder.writeSlice(source.signedData.asCell());
+    return builder.build();
+}
+
+export function dictValueParserSignedBundle(): DictionaryValue<SignedBundle> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeSignedBundle(src)).endCell());
+        },
+        parse: (src) => {
+            return loadSignedBundle(src.loadRef().beginParse());
+        }
+    }
+}
 
 export type StateInit = {
     $$type: 'StateInit';
@@ -28,36 +137,42 @@ export type StateInit = {
 
 export function storeStateInit(src: StateInit) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeRef(src.code);
         b_0.storeRef(src.data);
     };
 }
 
 export function loadStateInit(slice: Slice) {
-    let sc_0 = slice;
-    let _code = sc_0.loadRef();
-    let _data = sc_0.loadRef();
+    const sc_0 = slice;
+    const _code = sc_0.loadRef();
+    const _data = sc_0.loadRef();
     return { $$type: 'StateInit' as const, code: _code, data: _data };
 }
 
-function loadTupleStateInit(source: TupleReader) {
-    let _code = source.readCell();
-    let _data = source.readCell();
+export function loadTupleStateInit(source: TupleReader) {
+    const _code = source.readCell();
+    const _data = source.readCell();
     return { $$type: 'StateInit' as const, code: _code, data: _data };
 }
 
-function storeTupleStateInit(source: StateInit) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleStateInit(source: TupleReader) {
+    const _code = source.readCell();
+    const _data = source.readCell();
+    return { $$type: 'StateInit' as const, code: _code, data: _data };
+}
+
+export function storeTupleStateInit(source: StateInit) {
+    const builder = new TupleBuilder();
     builder.writeCell(source.code);
     builder.writeCell(source.data);
     return builder.build();
 }
 
-function dictValueParserStateInit(): DictionaryValue<StateInit> {
+export function dictValueParserStateInit(): DictionaryValue<StateInit> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeStateInit(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeStateInit(src)).endCell());
         },
         parse: (src) => {
             return loadStateInit(src.loadRef().beginParse());
@@ -67,52 +182,60 @@ function dictValueParserStateInit(): DictionaryValue<StateInit> {
 
 export type Context = {
     $$type: 'Context';
-    bounced: boolean;
+    bounceable: boolean;
     sender: Address;
     value: bigint;
-    raw: Cell;
+    raw: Slice;
 }
 
 export function storeContext(src: Context) {
     return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeBit(src.bounced);
+        const b_0 = builder;
+        b_0.storeBit(src.bounceable);
         b_0.storeAddress(src.sender);
         b_0.storeInt(src.value, 257);
-        b_0.storeRef(src.raw);
+        b_0.storeRef(src.raw.asCell());
     };
 }
 
 export function loadContext(slice: Slice) {
-    let sc_0 = slice;
-    let _bounced = sc_0.loadBit();
-    let _sender = sc_0.loadAddress();
-    let _value = sc_0.loadIntBig(257);
-    let _raw = sc_0.loadRef();
-    return { $$type: 'Context' as const, bounced: _bounced, sender: _sender, value: _value, raw: _raw };
+    const sc_0 = slice;
+    const _bounceable = sc_0.loadBit();
+    const _sender = sc_0.loadAddress();
+    const _value = sc_0.loadIntBig(257);
+    const _raw = sc_0.loadRef().asSlice();
+    return { $$type: 'Context' as const, bounceable: _bounceable, sender: _sender, value: _value, raw: _raw };
 }
 
-function loadTupleContext(source: TupleReader) {
-    let _bounced = source.readBoolean();
-    let _sender = source.readAddress();
-    let _value = source.readBigNumber();
-    let _raw = source.readCell();
-    return { $$type: 'Context' as const, bounced: _bounced, sender: _sender, value: _value, raw: _raw };
+export function loadTupleContext(source: TupleReader) {
+    const _bounceable = source.readBoolean();
+    const _sender = source.readAddress();
+    const _value = source.readBigNumber();
+    const _raw = source.readCell().asSlice();
+    return { $$type: 'Context' as const, bounceable: _bounceable, sender: _sender, value: _value, raw: _raw };
 }
 
-function storeTupleContext(source: Context) {
-    let builder = new TupleBuilder();
-    builder.writeBoolean(source.bounced);
+export function loadGetterTupleContext(source: TupleReader) {
+    const _bounceable = source.readBoolean();
+    const _sender = source.readAddress();
+    const _value = source.readBigNumber();
+    const _raw = source.readCell().asSlice();
+    return { $$type: 'Context' as const, bounceable: _bounceable, sender: _sender, value: _value, raw: _raw };
+}
+
+export function storeTupleContext(source: Context) {
+    const builder = new TupleBuilder();
+    builder.writeBoolean(source.bounceable);
     builder.writeAddress(source.sender);
     builder.writeNumber(source.value);
-    builder.writeSlice(source.raw);
+    builder.writeSlice(source.raw.asCell());
     return builder.build();
 }
 
-function dictValueParserContext(): DictionaryValue<Context> {
+export function dictValueParserContext(): DictionaryValue<Context> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeContext(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeContext(src)).endCell());
         },
         parse: (src) => {
             return loadContext(src.loadRef().beginParse());
@@ -122,70 +245,366 @@ function dictValueParserContext(): DictionaryValue<Context> {
 
 export type SendParameters = {
     $$type: 'SendParameters';
-    bounce: boolean;
-    to: Address;
-    value: bigint;
     mode: bigint;
     body: Cell | null;
     code: Cell | null;
     data: Cell | null;
+    value: bigint;
+    to: Address;
+    bounce: boolean;
 }
 
 export function storeSendParameters(src: SendParameters) {
     return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeBit(src.bounce);
-        b_0.storeAddress(src.to);
-        b_0.storeInt(src.value, 257);
+        const b_0 = builder;
         b_0.storeInt(src.mode, 257);
         if (src.body !== null && src.body !== undefined) { b_0.storeBit(true).storeRef(src.body); } else { b_0.storeBit(false); }
         if (src.code !== null && src.code !== undefined) { b_0.storeBit(true).storeRef(src.code); } else { b_0.storeBit(false); }
         if (src.data !== null && src.data !== undefined) { b_0.storeBit(true).storeRef(src.data); } else { b_0.storeBit(false); }
+        b_0.storeInt(src.value, 257);
+        b_0.storeAddress(src.to);
+        b_0.storeBit(src.bounce);
     };
 }
 
 export function loadSendParameters(slice: Slice) {
-    let sc_0 = slice;
-    let _bounce = sc_0.loadBit();
-    let _to = sc_0.loadAddress();
-    let _value = sc_0.loadIntBig(257);
-    let _mode = sc_0.loadIntBig(257);
-    let _body = sc_0.loadBit() ? sc_0.loadRef() : null;
-    let _code = sc_0.loadBit() ? sc_0.loadRef() : null;
-    let _data = sc_0.loadBit() ? sc_0.loadRef() : null;
-    return { $$type: 'SendParameters' as const, bounce: _bounce, to: _to, value: _value, mode: _mode, body: _body, code: _code, data: _data };
+    const sc_0 = slice;
+    const _mode = sc_0.loadIntBig(257);
+    const _body = sc_0.loadBit() ? sc_0.loadRef() : null;
+    const _code = sc_0.loadBit() ? sc_0.loadRef() : null;
+    const _data = sc_0.loadBit() ? sc_0.loadRef() : null;
+    const _value = sc_0.loadIntBig(257);
+    const _to = sc_0.loadAddress();
+    const _bounce = sc_0.loadBit();
+    return { $$type: 'SendParameters' as const, mode: _mode, body: _body, code: _code, data: _data, value: _value, to: _to, bounce: _bounce };
 }
 
-function loadTupleSendParameters(source: TupleReader) {
-    let _bounce = source.readBoolean();
-    let _to = source.readAddress();
-    let _value = source.readBigNumber();
-    let _mode = source.readBigNumber();
-    let _body = source.readCellOpt();
-    let _code = source.readCellOpt();
-    let _data = source.readCellOpt();
-    return { $$type: 'SendParameters' as const, bounce: _bounce, to: _to, value: _value, mode: _mode, body: _body, code: _code, data: _data };
+export function loadTupleSendParameters(source: TupleReader) {
+    const _mode = source.readBigNumber();
+    const _body = source.readCellOpt();
+    const _code = source.readCellOpt();
+    const _data = source.readCellOpt();
+    const _value = source.readBigNumber();
+    const _to = source.readAddress();
+    const _bounce = source.readBoolean();
+    return { $$type: 'SendParameters' as const, mode: _mode, body: _body, code: _code, data: _data, value: _value, to: _to, bounce: _bounce };
 }
 
-function storeTupleSendParameters(source: SendParameters) {
-    let builder = new TupleBuilder();
-    builder.writeBoolean(source.bounce);
-    builder.writeAddress(source.to);
-    builder.writeNumber(source.value);
+export function loadGetterTupleSendParameters(source: TupleReader) {
+    const _mode = source.readBigNumber();
+    const _body = source.readCellOpt();
+    const _code = source.readCellOpt();
+    const _data = source.readCellOpt();
+    const _value = source.readBigNumber();
+    const _to = source.readAddress();
+    const _bounce = source.readBoolean();
+    return { $$type: 'SendParameters' as const, mode: _mode, body: _body, code: _code, data: _data, value: _value, to: _to, bounce: _bounce };
+}
+
+export function storeTupleSendParameters(source: SendParameters) {
+    const builder = new TupleBuilder();
     builder.writeNumber(source.mode);
     builder.writeCell(source.body);
     builder.writeCell(source.code);
     builder.writeCell(source.data);
+    builder.writeNumber(source.value);
+    builder.writeAddress(source.to);
+    builder.writeBoolean(source.bounce);
     return builder.build();
 }
 
-function dictValueParserSendParameters(): DictionaryValue<SendParameters> {
+export function dictValueParserSendParameters(): DictionaryValue<SendParameters> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeSendParameters(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeSendParameters(src)).endCell());
         },
         parse: (src) => {
             return loadSendParameters(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type MessageParameters = {
+    $$type: 'MessageParameters';
+    mode: bigint;
+    body: Cell | null;
+    value: bigint;
+    to: Address;
+    bounce: boolean;
+}
+
+export function storeMessageParameters(src: MessageParameters) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeInt(src.mode, 257);
+        if (src.body !== null && src.body !== undefined) { b_0.storeBit(true).storeRef(src.body); } else { b_0.storeBit(false); }
+        b_0.storeInt(src.value, 257);
+        b_0.storeAddress(src.to);
+        b_0.storeBit(src.bounce);
+    };
+}
+
+export function loadMessageParameters(slice: Slice) {
+    const sc_0 = slice;
+    const _mode = sc_0.loadIntBig(257);
+    const _body = sc_0.loadBit() ? sc_0.loadRef() : null;
+    const _value = sc_0.loadIntBig(257);
+    const _to = sc_0.loadAddress();
+    const _bounce = sc_0.loadBit();
+    return { $$type: 'MessageParameters' as const, mode: _mode, body: _body, value: _value, to: _to, bounce: _bounce };
+}
+
+export function loadTupleMessageParameters(source: TupleReader) {
+    const _mode = source.readBigNumber();
+    const _body = source.readCellOpt();
+    const _value = source.readBigNumber();
+    const _to = source.readAddress();
+    const _bounce = source.readBoolean();
+    return { $$type: 'MessageParameters' as const, mode: _mode, body: _body, value: _value, to: _to, bounce: _bounce };
+}
+
+export function loadGetterTupleMessageParameters(source: TupleReader) {
+    const _mode = source.readBigNumber();
+    const _body = source.readCellOpt();
+    const _value = source.readBigNumber();
+    const _to = source.readAddress();
+    const _bounce = source.readBoolean();
+    return { $$type: 'MessageParameters' as const, mode: _mode, body: _body, value: _value, to: _to, bounce: _bounce };
+}
+
+export function storeTupleMessageParameters(source: MessageParameters) {
+    const builder = new TupleBuilder();
+    builder.writeNumber(source.mode);
+    builder.writeCell(source.body);
+    builder.writeNumber(source.value);
+    builder.writeAddress(source.to);
+    builder.writeBoolean(source.bounce);
+    return builder.build();
+}
+
+export function dictValueParserMessageParameters(): DictionaryValue<MessageParameters> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeMessageParameters(src)).endCell());
+        },
+        parse: (src) => {
+            return loadMessageParameters(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type DeployParameters = {
+    $$type: 'DeployParameters';
+    mode: bigint;
+    body: Cell | null;
+    value: bigint;
+    bounce: boolean;
+    init: StateInit;
+}
+
+export function storeDeployParameters(src: DeployParameters) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeInt(src.mode, 257);
+        if (src.body !== null && src.body !== undefined) { b_0.storeBit(true).storeRef(src.body); } else { b_0.storeBit(false); }
+        b_0.storeInt(src.value, 257);
+        b_0.storeBit(src.bounce);
+        b_0.store(storeStateInit(src.init));
+    };
+}
+
+export function loadDeployParameters(slice: Slice) {
+    const sc_0 = slice;
+    const _mode = sc_0.loadIntBig(257);
+    const _body = sc_0.loadBit() ? sc_0.loadRef() : null;
+    const _value = sc_0.loadIntBig(257);
+    const _bounce = sc_0.loadBit();
+    const _init = loadStateInit(sc_0);
+    return { $$type: 'DeployParameters' as const, mode: _mode, body: _body, value: _value, bounce: _bounce, init: _init };
+}
+
+export function loadTupleDeployParameters(source: TupleReader) {
+    const _mode = source.readBigNumber();
+    const _body = source.readCellOpt();
+    const _value = source.readBigNumber();
+    const _bounce = source.readBoolean();
+    const _init = loadTupleStateInit(source);
+    return { $$type: 'DeployParameters' as const, mode: _mode, body: _body, value: _value, bounce: _bounce, init: _init };
+}
+
+export function loadGetterTupleDeployParameters(source: TupleReader) {
+    const _mode = source.readBigNumber();
+    const _body = source.readCellOpt();
+    const _value = source.readBigNumber();
+    const _bounce = source.readBoolean();
+    const _init = loadGetterTupleStateInit(source);
+    return { $$type: 'DeployParameters' as const, mode: _mode, body: _body, value: _value, bounce: _bounce, init: _init };
+}
+
+export function storeTupleDeployParameters(source: DeployParameters) {
+    const builder = new TupleBuilder();
+    builder.writeNumber(source.mode);
+    builder.writeCell(source.body);
+    builder.writeNumber(source.value);
+    builder.writeBoolean(source.bounce);
+    builder.writeTuple(storeTupleStateInit(source.init));
+    return builder.build();
+}
+
+export function dictValueParserDeployParameters(): DictionaryValue<DeployParameters> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeDeployParameters(src)).endCell());
+        },
+        parse: (src) => {
+            return loadDeployParameters(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type StdAddress = {
+    $$type: 'StdAddress';
+    workchain: bigint;
+    address: bigint;
+}
+
+export function storeStdAddress(src: StdAddress) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeInt(src.workchain, 8);
+        b_0.storeUint(src.address, 256);
+    };
+}
+
+export function loadStdAddress(slice: Slice) {
+    const sc_0 = slice;
+    const _workchain = sc_0.loadIntBig(8);
+    const _address = sc_0.loadUintBig(256);
+    return { $$type: 'StdAddress' as const, workchain: _workchain, address: _address };
+}
+
+export function loadTupleStdAddress(source: TupleReader) {
+    const _workchain = source.readBigNumber();
+    const _address = source.readBigNumber();
+    return { $$type: 'StdAddress' as const, workchain: _workchain, address: _address };
+}
+
+export function loadGetterTupleStdAddress(source: TupleReader) {
+    const _workchain = source.readBigNumber();
+    const _address = source.readBigNumber();
+    return { $$type: 'StdAddress' as const, workchain: _workchain, address: _address };
+}
+
+export function storeTupleStdAddress(source: StdAddress) {
+    const builder = new TupleBuilder();
+    builder.writeNumber(source.workchain);
+    builder.writeNumber(source.address);
+    return builder.build();
+}
+
+export function dictValueParserStdAddress(): DictionaryValue<StdAddress> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeStdAddress(src)).endCell());
+        },
+        parse: (src) => {
+            return loadStdAddress(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type VarAddress = {
+    $$type: 'VarAddress';
+    workchain: bigint;
+    address: Slice;
+}
+
+export function storeVarAddress(src: VarAddress) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeInt(src.workchain, 32);
+        b_0.storeRef(src.address.asCell());
+    };
+}
+
+export function loadVarAddress(slice: Slice) {
+    const sc_0 = slice;
+    const _workchain = sc_0.loadIntBig(32);
+    const _address = sc_0.loadRef().asSlice();
+    return { $$type: 'VarAddress' as const, workchain: _workchain, address: _address };
+}
+
+export function loadTupleVarAddress(source: TupleReader) {
+    const _workchain = source.readBigNumber();
+    const _address = source.readCell().asSlice();
+    return { $$type: 'VarAddress' as const, workchain: _workchain, address: _address };
+}
+
+export function loadGetterTupleVarAddress(source: TupleReader) {
+    const _workchain = source.readBigNumber();
+    const _address = source.readCell().asSlice();
+    return { $$type: 'VarAddress' as const, workchain: _workchain, address: _address };
+}
+
+export function storeTupleVarAddress(source: VarAddress) {
+    const builder = new TupleBuilder();
+    builder.writeNumber(source.workchain);
+    builder.writeSlice(source.address.asCell());
+    return builder.build();
+}
+
+export function dictValueParserVarAddress(): DictionaryValue<VarAddress> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeVarAddress(src)).endCell());
+        },
+        parse: (src) => {
+            return loadVarAddress(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type BasechainAddress = {
+    $$type: 'BasechainAddress';
+    hash: bigint | null;
+}
+
+export function storeBasechainAddress(src: BasechainAddress) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        if (src.hash !== null && src.hash !== undefined) { b_0.storeBit(true).storeInt(src.hash, 257); } else { b_0.storeBit(false); }
+    };
+}
+
+export function loadBasechainAddress(slice: Slice) {
+    const sc_0 = slice;
+    const _hash = sc_0.loadBit() ? sc_0.loadIntBig(257) : null;
+    return { $$type: 'BasechainAddress' as const, hash: _hash };
+}
+
+export function loadTupleBasechainAddress(source: TupleReader) {
+    const _hash = source.readBigNumberOpt();
+    return { $$type: 'BasechainAddress' as const, hash: _hash };
+}
+
+export function loadGetterTupleBasechainAddress(source: TupleReader) {
+    const _hash = source.readBigNumberOpt();
+    return { $$type: 'BasechainAddress' as const, hash: _hash };
+}
+
+export function storeTupleBasechainAddress(source: BasechainAddress) {
+    const builder = new TupleBuilder();
+    builder.writeNumber(source.hash);
+    return builder.build();
+}
+
+export function dictValueParserBasechainAddress(): DictionaryValue<BasechainAddress> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeBasechainAddress(src)).endCell());
+        },
+        parse: (src) => {
+            return loadBasechainAddress(src.loadRef().beginParse());
         }
     }
 }
@@ -197,34 +616,39 @@ export type Deploy = {
 
 export function storeDeploy(src: Deploy) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(2490013878, 32);
         b_0.storeUint(src.queryId, 64);
     };
 }
 
 export function loadDeploy(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 2490013878) { throw Error('Invalid prefix'); }
-    let _queryId = sc_0.loadUintBig(64);
+    const _queryId = sc_0.loadUintBig(64);
     return { $$type: 'Deploy' as const, queryId: _queryId };
 }
 
-function loadTupleDeploy(source: TupleReader) {
-    let _queryId = source.readBigNumber();
+export function loadTupleDeploy(source: TupleReader) {
+    const _queryId = source.readBigNumber();
     return { $$type: 'Deploy' as const, queryId: _queryId };
 }
 
-function storeTupleDeploy(source: Deploy) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleDeploy(source: TupleReader) {
+    const _queryId = source.readBigNumber();
+    return { $$type: 'Deploy' as const, queryId: _queryId };
+}
+
+export function storeTupleDeploy(source: Deploy) {
+    const builder = new TupleBuilder();
     builder.writeNumber(source.queryId);
     return builder.build();
 }
 
-function dictValueParserDeploy(): DictionaryValue<Deploy> {
+export function dictValueParserDeploy(): DictionaryValue<Deploy> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeDeploy(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeDeploy(src)).endCell());
         },
         parse: (src) => {
             return loadDeploy(src.loadRef().beginParse());
@@ -239,34 +663,39 @@ export type DeployOk = {
 
 export function storeDeployOk(src: DeployOk) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(2952335191, 32);
         b_0.storeUint(src.queryId, 64);
     };
 }
 
 export function loadDeployOk(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 2952335191) { throw Error('Invalid prefix'); }
-    let _queryId = sc_0.loadUintBig(64);
+    const _queryId = sc_0.loadUintBig(64);
     return { $$type: 'DeployOk' as const, queryId: _queryId };
 }
 
-function loadTupleDeployOk(source: TupleReader) {
-    let _queryId = source.readBigNumber();
+export function loadTupleDeployOk(source: TupleReader) {
+    const _queryId = source.readBigNumber();
     return { $$type: 'DeployOk' as const, queryId: _queryId };
 }
 
-function storeTupleDeployOk(source: DeployOk) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleDeployOk(source: TupleReader) {
+    const _queryId = source.readBigNumber();
+    return { $$type: 'DeployOk' as const, queryId: _queryId };
+}
+
+export function storeTupleDeployOk(source: DeployOk) {
+    const builder = new TupleBuilder();
     builder.writeNumber(source.queryId);
     return builder.build();
 }
 
-function dictValueParserDeployOk(): DictionaryValue<DeployOk> {
+export function dictValueParserDeployOk(): DictionaryValue<DeployOk> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeDeployOk(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeDeployOk(src)).endCell());
         },
         parse: (src) => {
             return loadDeployOk(src.loadRef().beginParse());
@@ -282,7 +711,7 @@ export type FactoryDeploy = {
 
 export function storeFactoryDeploy(src: FactoryDeploy) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(1829761339, 32);
         b_0.storeUint(src.queryId, 64);
         b_0.storeAddress(src.cashback);
@@ -290,30 +719,36 @@ export function storeFactoryDeploy(src: FactoryDeploy) {
 }
 
 export function loadFactoryDeploy(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 1829761339) { throw Error('Invalid prefix'); }
-    let _queryId = sc_0.loadUintBig(64);
-    let _cashback = sc_0.loadAddress();
+    const _queryId = sc_0.loadUintBig(64);
+    const _cashback = sc_0.loadAddress();
     return { $$type: 'FactoryDeploy' as const, queryId: _queryId, cashback: _cashback };
 }
 
-function loadTupleFactoryDeploy(source: TupleReader) {
-    let _queryId = source.readBigNumber();
-    let _cashback = source.readAddress();
+export function loadTupleFactoryDeploy(source: TupleReader) {
+    const _queryId = source.readBigNumber();
+    const _cashback = source.readAddress();
     return { $$type: 'FactoryDeploy' as const, queryId: _queryId, cashback: _cashback };
 }
 
-function storeTupleFactoryDeploy(source: FactoryDeploy) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleFactoryDeploy(source: TupleReader) {
+    const _queryId = source.readBigNumber();
+    const _cashback = source.readAddress();
+    return { $$type: 'FactoryDeploy' as const, queryId: _queryId, cashback: _cashback };
+}
+
+export function storeTupleFactoryDeploy(source: FactoryDeploy) {
+    const builder = new TupleBuilder();
     builder.writeNumber(source.queryId);
     builder.writeAddress(source.cashback);
     return builder.build();
 }
 
-function dictValueParserFactoryDeploy(): DictionaryValue<FactoryDeploy> {
+export function dictValueParserFactoryDeploy(): DictionaryValue<FactoryDeploy> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeFactoryDeploy(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeFactoryDeploy(src)).endCell());
         },
         parse: (src) => {
             return loadFactoryDeploy(src.loadRef().beginParse());
@@ -329,7 +764,7 @@ export type ChangeOwner = {
 
 export function storeChangeOwner(src: ChangeOwner) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(2174598809, 32);
         b_0.storeUint(src.queryId, 64);
         b_0.storeAddress(src.newOwner);
@@ -337,30 +772,36 @@ export function storeChangeOwner(src: ChangeOwner) {
 }
 
 export function loadChangeOwner(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 2174598809) { throw Error('Invalid prefix'); }
-    let _queryId = sc_0.loadUintBig(64);
-    let _newOwner = sc_0.loadAddress();
+    const _queryId = sc_0.loadUintBig(64);
+    const _newOwner = sc_0.loadAddress();
     return { $$type: 'ChangeOwner' as const, queryId: _queryId, newOwner: _newOwner };
 }
 
-function loadTupleChangeOwner(source: TupleReader) {
-    let _queryId = source.readBigNumber();
-    let _newOwner = source.readAddress();
+export function loadTupleChangeOwner(source: TupleReader) {
+    const _queryId = source.readBigNumber();
+    const _newOwner = source.readAddress();
     return { $$type: 'ChangeOwner' as const, queryId: _queryId, newOwner: _newOwner };
 }
 
-function storeTupleChangeOwner(source: ChangeOwner) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleChangeOwner(source: TupleReader) {
+    const _queryId = source.readBigNumber();
+    const _newOwner = source.readAddress();
+    return { $$type: 'ChangeOwner' as const, queryId: _queryId, newOwner: _newOwner };
+}
+
+export function storeTupleChangeOwner(source: ChangeOwner) {
+    const builder = new TupleBuilder();
     builder.writeNumber(source.queryId);
     builder.writeAddress(source.newOwner);
     return builder.build();
 }
 
-function dictValueParserChangeOwner(): DictionaryValue<ChangeOwner> {
+export function dictValueParserChangeOwner(): DictionaryValue<ChangeOwner> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeChangeOwner(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeChangeOwner(src)).endCell());
         },
         parse: (src) => {
             return loadChangeOwner(src.loadRef().beginParse());
@@ -376,7 +817,7 @@ export type ChangeOwnerOk = {
 
 export function storeChangeOwnerOk(src: ChangeOwnerOk) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(846932810, 32);
         b_0.storeUint(src.queryId, 64);
         b_0.storeAddress(src.newOwner);
@@ -384,108 +825,39 @@ export function storeChangeOwnerOk(src: ChangeOwnerOk) {
 }
 
 export function loadChangeOwnerOk(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 846932810) { throw Error('Invalid prefix'); }
-    let _queryId = sc_0.loadUintBig(64);
-    let _newOwner = sc_0.loadAddress();
+    const _queryId = sc_0.loadUintBig(64);
+    const _newOwner = sc_0.loadAddress();
     return { $$type: 'ChangeOwnerOk' as const, queryId: _queryId, newOwner: _newOwner };
 }
 
-function loadTupleChangeOwnerOk(source: TupleReader) {
-    let _queryId = source.readBigNumber();
-    let _newOwner = source.readAddress();
+export function loadTupleChangeOwnerOk(source: TupleReader) {
+    const _queryId = source.readBigNumber();
+    const _newOwner = source.readAddress();
     return { $$type: 'ChangeOwnerOk' as const, queryId: _queryId, newOwner: _newOwner };
 }
 
-function storeTupleChangeOwnerOk(source: ChangeOwnerOk) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleChangeOwnerOk(source: TupleReader) {
+    const _queryId = source.readBigNumber();
+    const _newOwner = source.readAddress();
+    return { $$type: 'ChangeOwnerOk' as const, queryId: _queryId, newOwner: _newOwner };
+}
+
+export function storeTupleChangeOwnerOk(source: ChangeOwnerOk) {
+    const builder = new TupleBuilder();
     builder.writeNumber(source.queryId);
     builder.writeAddress(source.newOwner);
     return builder.build();
 }
 
-function dictValueParserChangeOwnerOk(): DictionaryValue<ChangeOwnerOk> {
+export function dictValueParserChangeOwnerOk(): DictionaryValue<ChangeOwnerOk> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeChangeOwnerOk(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeChangeOwnerOk(src)).endCell());
         },
         parse: (src) => {
             return loadChangeOwnerOk(src.loadRef().beginParse());
-        }
-    }
-}
-
-export type RouteDeployAndInitDao = {
-    $$type: 'RouteDeployAndInitDao';
-    prodMsgValue: bigint;
-    devMsgValue: bigint;
-    prodRegistry: Address;
-    devRegistry: Address;
-    owner: Address;
-    proposalOwner: Address;
-    metadata: Address;
-}
-
-export function storeRouteDeployAndInitDao(src: RouteDeployAndInitDao) {
-    return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeUint(739290419, 32);
-        b_0.storeUint(src.prodMsgValue, 64);
-        b_0.storeUint(src.devMsgValue, 64);
-        b_0.storeAddress(src.prodRegistry);
-        b_0.storeAddress(src.devRegistry);
-        b_0.storeAddress(src.owner);
-        let b_1 = new Builder();
-        b_1.storeAddress(src.proposalOwner);
-        b_1.storeAddress(src.metadata);
-        b_0.storeRef(b_1.endCell());
-    };
-}
-
-export function loadRouteDeployAndInitDao(slice: Slice) {
-    let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 739290419) { throw Error('Invalid prefix'); }
-    let _prodMsgValue = sc_0.loadUintBig(64);
-    let _devMsgValue = sc_0.loadUintBig(64);
-    let _prodRegistry = sc_0.loadAddress();
-    let _devRegistry = sc_0.loadAddress();
-    let _owner = sc_0.loadAddress();
-    let sc_1 = sc_0.loadRef().beginParse();
-    let _proposalOwner = sc_1.loadAddress();
-    let _metadata = sc_1.loadAddress();
-    return { $$type: 'RouteDeployAndInitDao' as const, prodMsgValue: _prodMsgValue, devMsgValue: _devMsgValue, prodRegistry: _prodRegistry, devRegistry: _devRegistry, owner: _owner, proposalOwner: _proposalOwner, metadata: _metadata };
-}
-
-function loadTupleRouteDeployAndInitDao(source: TupleReader) {
-    let _prodMsgValue = source.readBigNumber();
-    let _devMsgValue = source.readBigNumber();
-    let _prodRegistry = source.readAddress();
-    let _devRegistry = source.readAddress();
-    let _owner = source.readAddress();
-    let _proposalOwner = source.readAddress();
-    let _metadata = source.readAddress();
-    return { $$type: 'RouteDeployAndInitDao' as const, prodMsgValue: _prodMsgValue, devMsgValue: _devMsgValue, prodRegistry: _prodRegistry, devRegistry: _devRegistry, owner: _owner, proposalOwner: _proposalOwner, metadata: _metadata };
-}
-
-function storeTupleRouteDeployAndInitDao(source: RouteDeployAndInitDao) {
-    let builder = new TupleBuilder();
-    builder.writeNumber(source.prodMsgValue);
-    builder.writeNumber(source.devMsgValue);
-    builder.writeAddress(source.prodRegistry);
-    builder.writeAddress(source.devRegistry);
-    builder.writeAddress(source.owner);
-    builder.writeAddress(source.proposalOwner);
-    builder.writeAddress(source.metadata);
-    return builder.build();
-}
-
-function dictValueParserRouteDeployAndInitDao(): DictionaryValue<RouteDeployAndInitDao> {
-    return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeRouteDeployAndInitDao(src)).endCell());
-        },
-        parse: (src) => {
-            return loadRouteDeployAndInitDao(src.loadRef().beginParse());
         }
     }
 }
@@ -499,7 +871,7 @@ export type DeployAndInitDao = {
 
 export function storeDeployAndInitDao(src: DeployAndInitDao) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(3378223972, 32);
         b_0.storeAddress(src.owner);
         b_0.storeAddress(src.proposalOwner);
@@ -508,33 +880,40 @@ export function storeDeployAndInitDao(src: DeployAndInitDao) {
 }
 
 export function loadDeployAndInitDao(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 3378223972) { throw Error('Invalid prefix'); }
-    let _owner = sc_0.loadAddress();
-    let _proposalOwner = sc_0.loadAddress();
-    let _metadata = sc_0.loadAddress();
+    const _owner = sc_0.loadAddress();
+    const _proposalOwner = sc_0.loadAddress();
+    const _metadata = sc_0.loadAddress();
     return { $$type: 'DeployAndInitDao' as const, owner: _owner, proposalOwner: _proposalOwner, metadata: _metadata };
 }
 
-function loadTupleDeployAndInitDao(source: TupleReader) {
-    let _owner = source.readAddress();
-    let _proposalOwner = source.readAddress();
-    let _metadata = source.readAddress();
+export function loadTupleDeployAndInitDao(source: TupleReader) {
+    const _owner = source.readAddress();
+    const _proposalOwner = source.readAddress();
+    const _metadata = source.readAddress();
     return { $$type: 'DeployAndInitDao' as const, owner: _owner, proposalOwner: _proposalOwner, metadata: _metadata };
 }
 
-function storeTupleDeployAndInitDao(source: DeployAndInitDao) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleDeployAndInitDao(source: TupleReader) {
+    const _owner = source.readAddress();
+    const _proposalOwner = source.readAddress();
+    const _metadata = source.readAddress();
+    return { $$type: 'DeployAndInitDao' as const, owner: _owner, proposalOwner: _proposalOwner, metadata: _metadata };
+}
+
+export function storeTupleDeployAndInitDao(source: DeployAndInitDao) {
+    const builder = new TupleBuilder();
     builder.writeAddress(source.owner);
     builder.writeAddress(source.proposalOwner);
     builder.writeAddress(source.metadata);
     return builder.build();
 }
 
-function dictValueParserDeployAndInitDao(): DictionaryValue<DeployAndInitDao> {
+export function dictValueParserDeployAndInitDao(): DictionaryValue<DeployAndInitDao> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeDeployAndInitDao(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeDeployAndInitDao(src)).endCell());
         },
         parse: (src) => {
             return loadDeployAndInitDao(src.loadRef().beginParse());
@@ -551,7 +930,7 @@ export type SendDaoInit = {
 
 export function storeSendDaoInit(src: SendDaoInit) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(3367586747, 32);
         b_0.storeAddress(src.owner);
         b_0.storeAddress(src.proposalOwner);
@@ -560,33 +939,40 @@ export function storeSendDaoInit(src: SendDaoInit) {
 }
 
 export function loadSendDaoInit(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 3367586747) { throw Error('Invalid prefix'); }
-    let _owner = sc_0.loadAddress();
-    let _proposalOwner = sc_0.loadAddress();
-    let _metadata = sc_0.loadAddress();
+    const _owner = sc_0.loadAddress();
+    const _proposalOwner = sc_0.loadAddress();
+    const _metadata = sc_0.loadAddress();
     return { $$type: 'SendDaoInit' as const, owner: _owner, proposalOwner: _proposalOwner, metadata: _metadata };
 }
 
-function loadTupleSendDaoInit(source: TupleReader) {
-    let _owner = source.readAddress();
-    let _proposalOwner = source.readAddress();
-    let _metadata = source.readAddress();
+export function loadTupleSendDaoInit(source: TupleReader) {
+    const _owner = source.readAddress();
+    const _proposalOwner = source.readAddress();
+    const _metadata = source.readAddress();
     return { $$type: 'SendDaoInit' as const, owner: _owner, proposalOwner: _proposalOwner, metadata: _metadata };
 }
 
-function storeTupleSendDaoInit(source: SendDaoInit) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleSendDaoInit(source: TupleReader) {
+    const _owner = source.readAddress();
+    const _proposalOwner = source.readAddress();
+    const _metadata = source.readAddress();
+    return { $$type: 'SendDaoInit' as const, owner: _owner, proposalOwner: _proposalOwner, metadata: _metadata };
+}
+
+export function storeTupleSendDaoInit(source: SendDaoInit) {
+    const builder = new TupleBuilder();
     builder.writeAddress(source.owner);
     builder.writeAddress(source.proposalOwner);
     builder.writeAddress(source.metadata);
     return builder.build();
 }
 
-function dictValueParserSendDaoInit(): DictionaryValue<SendDaoInit> {
+export function dictValueParserSendDaoInit(): DictionaryValue<SendDaoInit> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeSendDaoInit(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeSendDaoInit(src)).endCell());
         },
         parse: (src) => {
             return loadSendDaoInit(src.loadRef().beginParse());
@@ -601,34 +987,39 @@ export type SetDeployAndInitDaoFee = {
 
 export function storeSetDeployAndInitDaoFee(src: SetDeployAndInitDaoFee) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(2828439833, 32);
         b_0.storeUint(src.newDeployAndInitDaoFee, 64);
     };
 }
 
 export function loadSetDeployAndInitDaoFee(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 2828439833) { throw Error('Invalid prefix'); }
-    let _newDeployAndInitDaoFee = sc_0.loadUintBig(64);
+    const _newDeployAndInitDaoFee = sc_0.loadUintBig(64);
     return { $$type: 'SetDeployAndInitDaoFee' as const, newDeployAndInitDaoFee: _newDeployAndInitDaoFee };
 }
 
-function loadTupleSetDeployAndInitDaoFee(source: TupleReader) {
-    let _newDeployAndInitDaoFee = source.readBigNumber();
+export function loadTupleSetDeployAndInitDaoFee(source: TupleReader) {
+    const _newDeployAndInitDaoFee = source.readBigNumber();
     return { $$type: 'SetDeployAndInitDaoFee' as const, newDeployAndInitDaoFee: _newDeployAndInitDaoFee };
 }
 
-function storeTupleSetDeployAndInitDaoFee(source: SetDeployAndInitDaoFee) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleSetDeployAndInitDaoFee(source: TupleReader) {
+    const _newDeployAndInitDaoFee = source.readBigNumber();
+    return { $$type: 'SetDeployAndInitDaoFee' as const, newDeployAndInitDaoFee: _newDeployAndInitDaoFee };
+}
+
+export function storeTupleSetDeployAndInitDaoFee(source: SetDeployAndInitDaoFee) {
+    const builder = new TupleBuilder();
     builder.writeNumber(source.newDeployAndInitDaoFee);
     return builder.build();
 }
 
-function dictValueParserSetDeployAndInitDaoFee(): DictionaryValue<SetDeployAndInitDaoFee> {
+export function dictValueParserSetDeployAndInitDaoFee(): DictionaryValue<SetDeployAndInitDaoFee> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeSetDeployAndInitDaoFee(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeSetDeployAndInitDaoFee(src)).endCell());
         },
         parse: (src) => {
             return loadSetDeployAndInitDaoFee(src.loadRef().beginParse());
@@ -643,34 +1034,39 @@ export type SetNewDaoFwdMsgFee = {
 
 export function storeSetNewDaoFwdMsgFee(src: SetNewDaoFwdMsgFee) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(60181454, 32);
         b_0.storeUint(src.newDaosfwdMsgFee, 64);
     };
 }
 
 export function loadSetNewDaoFwdMsgFee(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 60181454) { throw Error('Invalid prefix'); }
-    let _newDaosfwdMsgFee = sc_0.loadUintBig(64);
+    const _newDaosfwdMsgFee = sc_0.loadUintBig(64);
     return { $$type: 'SetNewDaoFwdMsgFee' as const, newDaosfwdMsgFee: _newDaosfwdMsgFee };
 }
 
-function loadTupleSetNewDaoFwdMsgFee(source: TupleReader) {
-    let _newDaosfwdMsgFee = source.readBigNumber();
+export function loadTupleSetNewDaoFwdMsgFee(source: TupleReader) {
+    const _newDaosfwdMsgFee = source.readBigNumber();
     return { $$type: 'SetNewDaoFwdMsgFee' as const, newDaosfwdMsgFee: _newDaosfwdMsgFee };
 }
 
-function storeTupleSetNewDaoFwdMsgFee(source: SetNewDaoFwdMsgFee) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleSetNewDaoFwdMsgFee(source: TupleReader) {
+    const _newDaosfwdMsgFee = source.readBigNumber();
+    return { $$type: 'SetNewDaoFwdMsgFee' as const, newDaosfwdMsgFee: _newDaosfwdMsgFee };
+}
+
+export function storeTupleSetNewDaoFwdMsgFee(source: SetNewDaoFwdMsgFee) {
+    const builder = new TupleBuilder();
     builder.writeNumber(source.newDaosfwdMsgFee);
     return builder.build();
 }
 
-function dictValueParserSetNewDaoFwdMsgFee(): DictionaryValue<SetNewDaoFwdMsgFee> {
+export function dictValueParserSetNewDaoFwdMsgFee(): DictionaryValue<SetNewDaoFwdMsgFee> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeSetNewDaoFwdMsgFee(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeSetNewDaoFwdMsgFee(src)).endCell());
         },
         parse: (src) => {
             return loadSetNewDaoFwdMsgFee(src.loadRef().beginParse());
@@ -686,7 +1082,7 @@ export type SendToDaoSetFwdMsgFee = {
 
 export function storeSendToDaoSetFwdMsgFee(src: SendToDaoSetFwdMsgFee) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(1477819782, 32);
         b_0.storeUint(src.daoId, 32);
         b_0.storeUint(src.newFwdMsgFee, 64);
@@ -694,30 +1090,36 @@ export function storeSendToDaoSetFwdMsgFee(src: SendToDaoSetFwdMsgFee) {
 }
 
 export function loadSendToDaoSetFwdMsgFee(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 1477819782) { throw Error('Invalid prefix'); }
-    let _daoId = sc_0.loadUintBig(32);
-    let _newFwdMsgFee = sc_0.loadUintBig(64);
+    const _daoId = sc_0.loadUintBig(32);
+    const _newFwdMsgFee = sc_0.loadUintBig(64);
     return { $$type: 'SendToDaoSetFwdMsgFee' as const, daoId: _daoId, newFwdMsgFee: _newFwdMsgFee };
 }
 
-function loadTupleSendToDaoSetFwdMsgFee(source: TupleReader) {
-    let _daoId = source.readBigNumber();
-    let _newFwdMsgFee = source.readBigNumber();
+export function loadTupleSendToDaoSetFwdMsgFee(source: TupleReader) {
+    const _daoId = source.readBigNumber();
+    const _newFwdMsgFee = source.readBigNumber();
     return { $$type: 'SendToDaoSetFwdMsgFee' as const, daoId: _daoId, newFwdMsgFee: _newFwdMsgFee };
 }
 
-function storeTupleSendToDaoSetFwdMsgFee(source: SendToDaoSetFwdMsgFee) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleSendToDaoSetFwdMsgFee(source: TupleReader) {
+    const _daoId = source.readBigNumber();
+    const _newFwdMsgFee = source.readBigNumber();
+    return { $$type: 'SendToDaoSetFwdMsgFee' as const, daoId: _daoId, newFwdMsgFee: _newFwdMsgFee };
+}
+
+export function storeTupleSendToDaoSetFwdMsgFee(source: SendToDaoSetFwdMsgFee) {
+    const builder = new TupleBuilder();
     builder.writeNumber(source.daoId);
     builder.writeNumber(source.newFwdMsgFee);
     return builder.build();
 }
 
-function dictValueParserSendToDaoSetFwdMsgFee(): DictionaryValue<SendToDaoSetFwdMsgFee> {
+export function dictValueParserSendToDaoSetFwdMsgFee(): DictionaryValue<SendToDaoSetFwdMsgFee> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeSendToDaoSetFwdMsgFee(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeSendToDaoSetFwdMsgFee(src)).endCell());
         },
         parse: (src) => {
             return loadSendToDaoSetFwdMsgFee(src.loadRef().beginParse());
@@ -732,34 +1134,39 @@ export type SetRegistryAdmin = {
 
 export function storeSetRegistryAdmin(src: SetRegistryAdmin) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(3335943114, 32);
         b_0.storeAddress(src.newAdmin);
     };
 }
 
 export function loadSetRegistryAdmin(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 3335943114) { throw Error('Invalid prefix'); }
-    let _newAdmin = sc_0.loadAddress();
+    const _newAdmin = sc_0.loadAddress();
     return { $$type: 'SetRegistryAdmin' as const, newAdmin: _newAdmin };
 }
 
-function loadTupleSetRegistryAdmin(source: TupleReader) {
-    let _newAdmin = source.readAddress();
+export function loadTupleSetRegistryAdmin(source: TupleReader) {
+    const _newAdmin = source.readAddress();
     return { $$type: 'SetRegistryAdmin' as const, newAdmin: _newAdmin };
 }
 
-function storeTupleSetRegistryAdmin(source: SetRegistryAdmin) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleSetRegistryAdmin(source: TupleReader) {
+    const _newAdmin = source.readAddress();
+    return { $$type: 'SetRegistryAdmin' as const, newAdmin: _newAdmin };
+}
+
+export function storeTupleSetRegistryAdmin(source: SetRegistryAdmin) {
+    const builder = new TupleBuilder();
     builder.writeAddress(source.newAdmin);
     return builder.build();
 }
 
-function dictValueParserSetRegistryAdmin(): DictionaryValue<SetRegistryAdmin> {
+export function dictValueParserSetRegistryAdmin(): DictionaryValue<SetRegistryAdmin> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeSetRegistryAdmin(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeSetRegistryAdmin(src)).endCell());
         },
         parse: (src) => {
             return loadSetRegistryAdmin(src.loadRef().beginParse());
@@ -778,7 +1185,7 @@ export type RegistryContractState = {
 
 export function storeRegistryContractState(src: RegistryContractState) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(src.registryId, 32);
         b_0.storeUint(src.nextDaoId, 32);
         b_0.storeAddress(src.admin);
@@ -788,26 +1195,35 @@ export function storeRegistryContractState(src: RegistryContractState) {
 }
 
 export function loadRegistryContractState(slice: Slice) {
-    let sc_0 = slice;
-    let _registryId = sc_0.loadUintBig(32);
-    let _nextDaoId = sc_0.loadUintBig(32);
-    let _admin = sc_0.loadAddress();
-    let _deployAndInitDaoFee = sc_0.loadUintBig(64);
-    let _newDaosfwdMsgFee = sc_0.loadUintBig(64);
+    const sc_0 = slice;
+    const _registryId = sc_0.loadUintBig(32);
+    const _nextDaoId = sc_0.loadUintBig(32);
+    const _admin = sc_0.loadAddress();
+    const _deployAndInitDaoFee = sc_0.loadUintBig(64);
+    const _newDaosfwdMsgFee = sc_0.loadUintBig(64);
     return { $$type: 'RegistryContractState' as const, registryId: _registryId, nextDaoId: _nextDaoId, admin: _admin, deployAndInitDaoFee: _deployAndInitDaoFee, newDaosfwdMsgFee: _newDaosfwdMsgFee };
 }
 
-function loadTupleRegistryContractState(source: TupleReader) {
-    let _registryId = source.readBigNumber();
-    let _nextDaoId = source.readBigNumber();
-    let _admin = source.readAddress();
-    let _deployAndInitDaoFee = source.readBigNumber();
-    let _newDaosfwdMsgFee = source.readBigNumber();
+export function loadTupleRegistryContractState(source: TupleReader) {
+    const _registryId = source.readBigNumber();
+    const _nextDaoId = source.readBigNumber();
+    const _admin = source.readAddress();
+    const _deployAndInitDaoFee = source.readBigNumber();
+    const _newDaosfwdMsgFee = source.readBigNumber();
     return { $$type: 'RegistryContractState' as const, registryId: _registryId, nextDaoId: _nextDaoId, admin: _admin, deployAndInitDaoFee: _deployAndInitDaoFee, newDaosfwdMsgFee: _newDaosfwdMsgFee };
 }
 
-function storeTupleRegistryContractState(source: RegistryContractState) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleRegistryContractState(source: TupleReader) {
+    const _registryId = source.readBigNumber();
+    const _nextDaoId = source.readBigNumber();
+    const _admin = source.readAddress();
+    const _deployAndInitDaoFee = source.readBigNumber();
+    const _newDaosfwdMsgFee = source.readBigNumber();
+    return { $$type: 'RegistryContractState' as const, registryId: _registryId, nextDaoId: _nextDaoId, admin: _admin, deployAndInitDaoFee: _deployAndInitDaoFee, newDaosfwdMsgFee: _newDaosfwdMsgFee };
+}
+
+export function storeTupleRegistryContractState(source: RegistryContractState) {
+    const builder = new TupleBuilder();
     builder.writeNumber(source.registryId);
     builder.writeNumber(source.nextDaoId);
     builder.writeAddress(source.admin);
@@ -816,13 +1232,91 @@ function storeTupleRegistryContractState(source: RegistryContractState) {
     return builder.build();
 }
 
-function dictValueParserRegistryContractState(): DictionaryValue<RegistryContractState> {
+export function dictValueParserRegistryContractState(): DictionaryValue<RegistryContractState> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeRegistryContractState(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeRegistryContractState(src)).endCell());
         },
         parse: (src) => {
             return loadRegistryContractState(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type Dao$Data = {
+    $$type: 'Dao$Data';
+    owner: Address;
+    registry: Address;
+    proposalOwner: Address;
+    daoIndex: bigint;
+    metadata: Address;
+    fwdMsgFee: bigint;
+}
+
+export function storeDao$Data(src: Dao$Data) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeAddress(src.owner);
+        b_0.storeAddress(src.registry);
+        b_0.storeAddress(src.proposalOwner);
+        b_0.storeUint(src.daoIndex, 32);
+        const b_1 = new Builder();
+        b_1.storeAddress(src.metadata);
+        b_1.storeUint(src.fwdMsgFee, 64);
+        b_0.storeRef(b_1.endCell());
+    };
+}
+
+export function loadDao$Data(slice: Slice) {
+    const sc_0 = slice;
+    const _owner = sc_0.loadAddress();
+    const _registry = sc_0.loadAddress();
+    const _proposalOwner = sc_0.loadAddress();
+    const _daoIndex = sc_0.loadUintBig(32);
+    const sc_1 = sc_0.loadRef().beginParse();
+    const _metadata = sc_1.loadAddress();
+    const _fwdMsgFee = sc_1.loadUintBig(64);
+    return { $$type: 'Dao$Data' as const, owner: _owner, registry: _registry, proposalOwner: _proposalOwner, daoIndex: _daoIndex, metadata: _metadata, fwdMsgFee: _fwdMsgFee };
+}
+
+export function loadTupleDao$Data(source: TupleReader) {
+    const _owner = source.readAddress();
+    const _registry = source.readAddress();
+    const _proposalOwner = source.readAddress();
+    const _daoIndex = source.readBigNumber();
+    const _metadata = source.readAddress();
+    const _fwdMsgFee = source.readBigNumber();
+    return { $$type: 'Dao$Data' as const, owner: _owner, registry: _registry, proposalOwner: _proposalOwner, daoIndex: _daoIndex, metadata: _metadata, fwdMsgFee: _fwdMsgFee };
+}
+
+export function loadGetterTupleDao$Data(source: TupleReader) {
+    const _owner = source.readAddress();
+    const _registry = source.readAddress();
+    const _proposalOwner = source.readAddress();
+    const _daoIndex = source.readBigNumber();
+    const _metadata = source.readAddress();
+    const _fwdMsgFee = source.readBigNumber();
+    return { $$type: 'Dao$Data' as const, owner: _owner, registry: _registry, proposalOwner: _proposalOwner, daoIndex: _daoIndex, metadata: _metadata, fwdMsgFee: _fwdMsgFee };
+}
+
+export function storeTupleDao$Data(source: Dao$Data) {
+    const builder = new TupleBuilder();
+    builder.writeAddress(source.owner);
+    builder.writeAddress(source.registry);
+    builder.writeAddress(source.proposalOwner);
+    builder.writeNumber(source.daoIndex);
+    builder.writeAddress(source.metadata);
+    builder.writeNumber(source.fwdMsgFee);
+    return builder.build();
+}
+
+export function dictValueParserDao$Data(): DictionaryValue<Dao$Data> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeDao$Data(src)).endCell());
+        },
+        parse: (src) => {
+            return loadDao$Data(src.loadRef().beginParse());
         }
     }
 }
@@ -834,34 +1328,39 @@ export type SetOwner = {
 
 export function storeSetOwner(src: SetOwner) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(3266583875, 32);
         b_0.storeAddress(src.newOwner);
     };
 }
 
 export function loadSetOwner(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 3266583875) { throw Error('Invalid prefix'); }
-    let _newOwner = sc_0.loadAddress();
+    const _newOwner = sc_0.loadAddress();
     return { $$type: 'SetOwner' as const, newOwner: _newOwner };
 }
 
-function loadTupleSetOwner(source: TupleReader) {
-    let _newOwner = source.readAddress();
+export function loadTupleSetOwner(source: TupleReader) {
+    const _newOwner = source.readAddress();
     return { $$type: 'SetOwner' as const, newOwner: _newOwner };
 }
 
-function storeTupleSetOwner(source: SetOwner) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleSetOwner(source: TupleReader) {
+    const _newOwner = source.readAddress();
+    return { $$type: 'SetOwner' as const, newOwner: _newOwner };
+}
+
+export function storeTupleSetOwner(source: SetOwner) {
+    const builder = new TupleBuilder();
     builder.writeAddress(source.newOwner);
     return builder.build();
 }
 
-function dictValueParserSetOwner(): DictionaryValue<SetOwner> {
+export function dictValueParserSetOwner(): DictionaryValue<SetOwner> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeSetOwner(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeSetOwner(src)).endCell());
         },
         parse: (src) => {
             return loadSetOwner(src.loadRef().beginParse());
@@ -876,34 +1375,39 @@ export type SetProposalOwner = {
 
 export function storeSetProposalOwner(src: SetProposalOwner) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(3504586358, 32);
         b_0.storeAddress(src.newProposalOwner);
     };
 }
 
 export function loadSetProposalOwner(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 3504586358) { throw Error('Invalid prefix'); }
-    let _newProposalOwner = sc_0.loadAddress();
+    const _newProposalOwner = sc_0.loadAddress();
     return { $$type: 'SetProposalOwner' as const, newProposalOwner: _newProposalOwner };
 }
 
-function loadTupleSetProposalOwner(source: TupleReader) {
-    let _newProposalOwner = source.readAddress();
+export function loadTupleSetProposalOwner(source: TupleReader) {
+    const _newProposalOwner = source.readAddress();
     return { $$type: 'SetProposalOwner' as const, newProposalOwner: _newProposalOwner };
 }
 
-function storeTupleSetProposalOwner(source: SetProposalOwner) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleSetProposalOwner(source: TupleReader) {
+    const _newProposalOwner = source.readAddress();
+    return { $$type: 'SetProposalOwner' as const, newProposalOwner: _newProposalOwner };
+}
+
+export function storeTupleSetProposalOwner(source: SetProposalOwner) {
+    const builder = new TupleBuilder();
     builder.writeAddress(source.newProposalOwner);
     return builder.build();
 }
 
-function dictValueParserSetProposalOwner(): DictionaryValue<SetProposalOwner> {
+export function dictValueParserSetProposalOwner(): DictionaryValue<SetProposalOwner> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeSetProposalOwner(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeSetProposalOwner(src)).endCell());
         },
         parse: (src) => {
             return loadSetProposalOwner(src.loadRef().beginParse());
@@ -918,34 +1422,39 @@ export type SetFwdMsgFee = {
 
 export function storeSetFwdMsgFee(src: SetFwdMsgFee) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(4109608450, 32);
         b_0.storeUint(src.newFwdMsgFee, 64);
     };
 }
 
 export function loadSetFwdMsgFee(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 4109608450) { throw Error('Invalid prefix'); }
-    let _newFwdMsgFee = sc_0.loadUintBig(64);
+    const _newFwdMsgFee = sc_0.loadUintBig(64);
     return { $$type: 'SetFwdMsgFee' as const, newFwdMsgFee: _newFwdMsgFee };
 }
 
-function loadTupleSetFwdMsgFee(source: TupleReader) {
-    let _newFwdMsgFee = source.readBigNumber();
+export function loadTupleSetFwdMsgFee(source: TupleReader) {
+    const _newFwdMsgFee = source.readBigNumber();
     return { $$type: 'SetFwdMsgFee' as const, newFwdMsgFee: _newFwdMsgFee };
 }
 
-function storeTupleSetFwdMsgFee(source: SetFwdMsgFee) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleSetFwdMsgFee(source: TupleReader) {
+    const _newFwdMsgFee = source.readBigNumber();
+    return { $$type: 'SetFwdMsgFee' as const, newFwdMsgFee: _newFwdMsgFee };
+}
+
+export function storeTupleSetFwdMsgFee(source: SetFwdMsgFee) {
+    const builder = new TupleBuilder();
     builder.writeNumber(source.newFwdMsgFee);
     return builder.build();
 }
 
-function dictValueParserSetFwdMsgFee(): DictionaryValue<SetFwdMsgFee> {
+export function dictValueParserSetFwdMsgFee(): DictionaryValue<SetFwdMsgFee> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeSetFwdMsgFee(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeSetFwdMsgFee(src)).endCell());
         },
         parse: (src) => {
             return loadSetFwdMsgFee(src.loadRef().beginParse());
@@ -960,34 +1469,39 @@ export type SetMetadata = {
 
 export function storeSetMetadata(src: SetMetadata) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(3660550271, 32);
         b_0.storeAddress(src.newMetadata);
     };
 }
 
 export function loadSetMetadata(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 3660550271) { throw Error('Invalid prefix'); }
-    let _newMetadata = sc_0.loadAddress();
+    const _newMetadata = sc_0.loadAddress();
     return { $$type: 'SetMetadata' as const, newMetadata: _newMetadata };
 }
 
-function loadTupleSetMetadata(source: TupleReader) {
-    let _newMetadata = source.readAddress();
+export function loadTupleSetMetadata(source: TupleReader) {
+    const _newMetadata = source.readAddress();
     return { $$type: 'SetMetadata' as const, newMetadata: _newMetadata };
 }
 
-function storeTupleSetMetadata(source: SetMetadata) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleSetMetadata(source: TupleReader) {
+    const _newMetadata = source.readAddress();
+    return { $$type: 'SetMetadata' as const, newMetadata: _newMetadata };
+}
+
+export function storeTupleSetMetadata(source: SetMetadata) {
+    const builder = new TupleBuilder();
     builder.writeAddress(source.newMetadata);
     return builder.build();
 }
 
-function dictValueParserSetMetadata(): DictionaryValue<SetMetadata> {
+export function dictValueParserSetMetadata(): DictionaryValue<SetMetadata> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeSetMetadata(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeSetMetadata(src)).endCell());
         },
         parse: (src) => {
             return loadSetMetadata(src.loadRef().beginParse());
@@ -1002,34 +1516,39 @@ export type FwdMsg = {
 
 export function storeFwdMsg(src: FwdMsg) {
     return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeUint(1690551268, 32);
+        const b_0 = builder;
+        b_0.storeUint(1779549316, 32);
         b_0.store(storeSendParameters(src.fwdMsg));
     };
 }
 
 export function loadFwdMsg(slice: Slice) {
-    let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 1690551268) { throw Error('Invalid prefix'); }
-    let _fwdMsg = loadSendParameters(sc_0);
+    const sc_0 = slice;
+    if (sc_0.loadUint(32) !== 1779549316) { throw Error('Invalid prefix'); }
+    const _fwdMsg = loadSendParameters(sc_0);
     return { $$type: 'FwdMsg' as const, fwdMsg: _fwdMsg };
 }
 
-function loadTupleFwdMsg(source: TupleReader) {
-    const _fwdMsg = loadTupleSendParameters(source.readTuple());
+export function loadTupleFwdMsg(source: TupleReader) {
+    const _fwdMsg = loadTupleSendParameters(source);
     return { $$type: 'FwdMsg' as const, fwdMsg: _fwdMsg };
 }
 
-function storeTupleFwdMsg(source: FwdMsg) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleFwdMsg(source: TupleReader) {
+    const _fwdMsg = loadGetterTupleSendParameters(source);
+    return { $$type: 'FwdMsg' as const, fwdMsg: _fwdMsg };
+}
+
+export function storeTupleFwdMsg(source: FwdMsg) {
+    const builder = new TupleBuilder();
     builder.writeTuple(storeTupleSendParameters(source.fwdMsg));
     return builder.build();
 }
 
-function dictValueParserFwdMsg(): DictionaryValue<FwdMsg> {
+export function dictValueParserFwdMsg(): DictionaryValue<FwdMsg> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeFwdMsg(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeFwdMsg(src)).endCell());
         },
         parse: (src) => {
             return loadFwdMsg(src.loadRef().beginParse());
@@ -1047,7 +1566,7 @@ export type DaoInit = {
 
 export function storeDaoInit(src: DaoInit) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(3971512043, 32);
         b_0.storeAddress(src.owner);
         b_0.storeAddress(src.proposalOwner);
@@ -1057,25 +1576,33 @@ export function storeDaoInit(src: DaoInit) {
 }
 
 export function loadDaoInit(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 3971512043) { throw Error('Invalid prefix'); }
-    let _owner = sc_0.loadAddress();
-    let _proposalOwner = sc_0.loadAddress();
-    let _metadata = sc_0.loadAddress();
-    let _fwdMsgFee = sc_0.loadUintBig(64);
+    const _owner = sc_0.loadAddress();
+    const _proposalOwner = sc_0.loadAddress();
+    const _metadata = sc_0.loadAddress();
+    const _fwdMsgFee = sc_0.loadUintBig(64);
     return { $$type: 'DaoInit' as const, owner: _owner, proposalOwner: _proposalOwner, metadata: _metadata, fwdMsgFee: _fwdMsgFee };
 }
 
-function loadTupleDaoInit(source: TupleReader) {
-    let _owner = source.readAddress();
-    let _proposalOwner = source.readAddress();
-    let _metadata = source.readAddress();
-    let _fwdMsgFee = source.readBigNumber();
+export function loadTupleDaoInit(source: TupleReader) {
+    const _owner = source.readAddress();
+    const _proposalOwner = source.readAddress();
+    const _metadata = source.readAddress();
+    const _fwdMsgFee = source.readBigNumber();
     return { $$type: 'DaoInit' as const, owner: _owner, proposalOwner: _proposalOwner, metadata: _metadata, fwdMsgFee: _fwdMsgFee };
 }
 
-function storeTupleDaoInit(source: DaoInit) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleDaoInit(source: TupleReader) {
+    const _owner = source.readAddress();
+    const _proposalOwner = source.readAddress();
+    const _metadata = source.readAddress();
+    const _fwdMsgFee = source.readBigNumber();
+    return { $$type: 'DaoInit' as const, owner: _owner, proposalOwner: _proposalOwner, metadata: _metadata, fwdMsgFee: _fwdMsgFee };
+}
+
+export function storeTupleDaoInit(source: DaoInit) {
+    const builder = new TupleBuilder();
     builder.writeAddress(source.owner);
     builder.writeAddress(source.proposalOwner);
     builder.writeAddress(source.metadata);
@@ -1083,10 +1610,10 @@ function storeTupleDaoInit(source: DaoInit) {
     return builder.build();
 }
 
-function dictValueParserDaoInit(): DictionaryValue<DaoInit> {
+export function dictValueParserDaoInit(): DictionaryValue<DaoInit> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeDaoInit(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeDaoInit(src)).endCell());
         },
         parse: (src) => {
             return loadDaoInit(src.loadRef().beginParse());
@@ -1106,11 +1633,11 @@ export type DaoContractState = {
 
 export function storeDaoContractState(src: DaoContractState) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeAddress(src.registry);
         b_0.storeAddress(src.owner);
         b_0.storeAddress(src.proposalOwner);
-        let b_1 = new Builder();
+        const b_1 = new Builder();
         b_1.storeAddress(src.metadata);
         b_1.storeUint(src.daoIndex, 32);
         b_1.storeUint(src.fwdMsgFee, 64);
@@ -1119,29 +1646,39 @@ export function storeDaoContractState(src: DaoContractState) {
 }
 
 export function loadDaoContractState(slice: Slice) {
-    let sc_0 = slice;
-    let _registry = sc_0.loadAddress();
-    let _owner = sc_0.loadAddress();
-    let _proposalOwner = sc_0.loadAddress();
-    let sc_1 = sc_0.loadRef().beginParse();
-    let _metadata = sc_1.loadAddress();
-    let _daoIndex = sc_1.loadUintBig(32);
-    let _fwdMsgFee = sc_1.loadUintBig(64);
+    const sc_0 = slice;
+    const _registry = sc_0.loadAddress();
+    const _owner = sc_0.loadAddress();
+    const _proposalOwner = sc_0.loadAddress();
+    const sc_1 = sc_0.loadRef().beginParse();
+    const _metadata = sc_1.loadAddress();
+    const _daoIndex = sc_1.loadUintBig(32);
+    const _fwdMsgFee = sc_1.loadUintBig(64);
     return { $$type: 'DaoContractState' as const, registry: _registry, owner: _owner, proposalOwner: _proposalOwner, metadata: _metadata, daoIndex: _daoIndex, fwdMsgFee: _fwdMsgFee };
 }
 
-function loadTupleDaoContractState(source: TupleReader) {
-    let _registry = source.readAddress();
-    let _owner = source.readAddress();
-    let _proposalOwner = source.readAddress();
-    let _metadata = source.readAddress();
-    let _daoIndex = source.readBigNumber();
-    let _fwdMsgFee = source.readBigNumber();
+export function loadTupleDaoContractState(source: TupleReader) {
+    const _registry = source.readAddress();
+    const _owner = source.readAddress();
+    const _proposalOwner = source.readAddress();
+    const _metadata = source.readAddress();
+    const _daoIndex = source.readBigNumber();
+    const _fwdMsgFee = source.readBigNumber();
     return { $$type: 'DaoContractState' as const, registry: _registry, owner: _owner, proposalOwner: _proposalOwner, metadata: _metadata, daoIndex: _daoIndex, fwdMsgFee: _fwdMsgFee };
 }
 
-function storeTupleDaoContractState(source: DaoContractState) {
-    let builder = new TupleBuilder();
+export function loadGetterTupleDaoContractState(source: TupleReader) {
+    const _registry = source.readAddress();
+    const _owner = source.readAddress();
+    const _proposalOwner = source.readAddress();
+    const _metadata = source.readAddress();
+    const _daoIndex = source.readBigNumber();
+    const _fwdMsgFee = source.readBigNumber();
+    return { $$type: 'DaoContractState' as const, registry: _registry, owner: _owner, proposalOwner: _proposalOwner, metadata: _metadata, daoIndex: _daoIndex, fwdMsgFee: _fwdMsgFee };
+}
+
+export function storeTupleDaoContractState(source: DaoContractState) {
+    const builder = new TupleBuilder();
     builder.writeAddress(source.registry);
     builder.writeAddress(source.owner);
     builder.writeAddress(source.proposalOwner);
@@ -1151,10 +1688,10 @@ function storeTupleDaoContractState(source: DaoContractState) {
     return builder.build();
 }
 
-function dictValueParserDaoContractState(): DictionaryValue<DaoContractState> {
+export function dictValueParserDaoContractState(): DictionaryValue<DaoContractState> {
     return {
-        serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeDaoContractState(src)).endCell());
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeDaoContractState(src)).endCell());
         },
         parse: (src) => {
             return loadDaoContractState(src.loadRef().beginParse());
@@ -1162,75 +1699,213 @@ function dictValueParserDaoContractState(): DictionaryValue<DaoContractState> {
     }
 }
 
- type Registry_init_args = {
-    $$type: 'Registry_init_args';
+export type Registry$Data = {
+    $$type: 'Registry$Data';
     registryId: bigint;
+    nextDaoId: bigint;
+    admin: Address;
+    deployAndInitDaoFee: bigint;
+    newDaosfwdMsgFee: bigint;
 }
 
-function initRegistry_init_args(src: Registry_init_args) {
+export function storeRegistry$Data(src: Registry$Data) {
     return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeInt(src.registryId, 257);
+        const b_0 = builder;
+        b_0.storeUint(src.registryId, 32);
+        b_0.storeUint(src.nextDaoId, 32);
+        b_0.storeAddress(src.admin);
+        b_0.storeUint(src.deployAndInitDaoFee, 64);
+        b_0.storeUint(src.newDaosfwdMsgFee, 64);
     };
 }
 
-async function Registry_init(registryId: bigint) {
-    const __code = Cell.fromBase64('te6ccgECIQEABqwAART/APSkE/S88sgLAQIBYgIDAurQAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxVFNs88uCCyPhDAcx/AcoAVUBQRcsfEssfASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFss/yz/J7VQcBAIBIBARA/QBkjB/4HAh10nCH5UwINcLH94gghDJW5tkuuMCIIIQqJaRGbqOHzDTHwGCEKiWkRm68uCB0z8BMTKBEfj4QlJAxwXy9H/gIIILlkvOuo4fMNMfAYILlkvOuvLggdM/ATExggDazPhCUkDHBfL0f+AgghBYFb2GuuMCIAUGBwHoMNMfAYIQyVubZLry4IH6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiEMwbBPbPH8IASow0x8BghBYFb2GuvLggdMf0z9ZbBILAfqCEMbWc8q6jnMw0x8BghDG1nPKuvLggfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgxgVuc+EJSUMcFkjR/jjJwIMhyAcsBcAHLABLKB8v/ydAg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIUAXHBeIU8vR/4AwCxoIAtQD4QW8kE18DJr7y9CYQWAQQNkgH2zxccFnIcAHLAXMBywFwAcsAEszMyfkAyHIBywFwAcsAEsoHy//J0CDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhwcFCsgEBRxh8JAvzIVTCCEOy4dutQBcsfUAMg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYBINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFss/yRYQWRBLEDpQohBGEEXbPKQOCgAGVSAEAuaBIcX4QlJgxwXy9FVQ2zxwWchwAcsBcwHLAXABywASzMzJ+QDIcgHLAXABywASygfL/8nQINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiHBwgEAJyAGCEPTzpgJYyx/LP8kQNEEwGRAkECNtbds8VQN/Hw4BZoIQlGqYtrqOp9MfAYIQlGqYtrry4IHTPwExyAGCEK/5D1dYyx/LP8n4QgFwbds8f+AwcA0BOm1tIm6zmVsgbvLQgG8iAZEy4hAkcAMEgEJQI9s8DgHKyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAD+gJwAcpoI26zkX+TJG6z4pczMwFwAcoA4w0hbrOcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wAPAJh/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMAhG9eK7Z5tnjYqwcEgIBIBMUAApUdDJTQwIBIBUWAgFIGBkCEbQwO2ebZ42KMBwXALm3ejBOC52Hq6WVz2PQnYc6yVCjbNBOE7rGpaVsj5ZkWnXlv74sRzBOBAq4A3AM7HKZywdVyOS2WHBOA3qTvfKost446np7wKs4ZNBOE7Lpy1Zp2W5nQdLNsozdFJAAAiMCAWIaGwB1sm7jQ1aXBmczovL1FtUWZVRWl2UnBISE5oRmdrQzN1Uno0dkx1RHZvdk1YSm9RdmN2cG5tRHEyQXKCACE6eRtniqCbZ42KMcHQAPpX3aiaGkAAMBnO1E0NQB+GPSAAGOLNMf0x/6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdM/0z9VQGwV4Pgo1wsKgwm68uCJgQEB1wABAdHbPB4Bhts8cFnIcAHLAXMBywFwAcsAEszMyfkAyHIBywFwAcsAEsoHy//J0CDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgfAHZwUwDIcgHLAXABywASygfL/8nQINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiIIQO5rKAIIQBfXhAAEO+EP4KFjbPCAAogLQ9AQwbQGBZD8BgBD0D2+h8uCHAYFkPyICgBD0F8gByPQAyQHMcAHKAEADWSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFoEBAc8AyQ==');
-    const __system = Cell.fromBase64('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');
-    let builder = beginCell();
-    builder.storeRef(__system);
+export function loadRegistry$Data(slice: Slice) {
+    const sc_0 = slice;
+    const _registryId = sc_0.loadUintBig(32);
+    const _nextDaoId = sc_0.loadUintBig(32);
+    const _admin = sc_0.loadAddress();
+    const _deployAndInitDaoFee = sc_0.loadUintBig(64);
+    const _newDaosfwdMsgFee = sc_0.loadUintBig(64);
+    return { $$type: 'Registry$Data' as const, registryId: _registryId, nextDaoId: _nextDaoId, admin: _admin, deployAndInitDaoFee: _deployAndInitDaoFee, newDaosfwdMsgFee: _newDaosfwdMsgFee };
+}
+
+export function loadTupleRegistry$Data(source: TupleReader) {
+    const _registryId = source.readBigNumber();
+    const _nextDaoId = source.readBigNumber();
+    const _admin = source.readAddress();
+    const _deployAndInitDaoFee = source.readBigNumber();
+    const _newDaosfwdMsgFee = source.readBigNumber();
+    return { $$type: 'Registry$Data' as const, registryId: _registryId, nextDaoId: _nextDaoId, admin: _admin, deployAndInitDaoFee: _deployAndInitDaoFee, newDaosfwdMsgFee: _newDaosfwdMsgFee };
+}
+
+export function loadGetterTupleRegistry$Data(source: TupleReader) {
+    const _registryId = source.readBigNumber();
+    const _nextDaoId = source.readBigNumber();
+    const _admin = source.readAddress();
+    const _deployAndInitDaoFee = source.readBigNumber();
+    const _newDaosfwdMsgFee = source.readBigNumber();
+    return { $$type: 'Registry$Data' as const, registryId: _registryId, nextDaoId: _nextDaoId, admin: _admin, deployAndInitDaoFee: _deployAndInitDaoFee, newDaosfwdMsgFee: _newDaosfwdMsgFee };
+}
+
+export function storeTupleRegistry$Data(source: Registry$Data) {
+    const builder = new TupleBuilder();
+    builder.writeNumber(source.registryId);
+    builder.writeNumber(source.nextDaoId);
+    builder.writeAddress(source.admin);
+    builder.writeNumber(source.deployAndInitDaoFee);
+    builder.writeNumber(source.newDaosfwdMsgFee);
+    return builder.build();
+}
+
+export function dictValueParserRegistry$Data(): DictionaryValue<Registry$Data> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeRegistry$Data(src)).endCell());
+        },
+        parse: (src) => {
+            return loadRegistry$Data(src.loadRef().beginParse());
+        }
+    }
+}
+
+ type Dao_init_args = {
+    $$type: 'Dao_init_args';
+    registry: Address;
+    daoIndex: bigint;
+}
+
+function initDao_init_args(src: Dao_init_args) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeAddress(src.registry);
+        b_0.storeInt(src.daoIndex, 257);
+    };
+}
+
+async function Dao_init(registry: Address, daoIndex: bigint) {
+    // Fixed: Cell.fromHex does not exist, use Cell.fromBoc(Buffer.from(..., 'hex'))[0]
+    const __code = Cell.fromBoc(Buffer.from('b5ee9c7241020c0100038500022cff008e88f4a413f4bcf2c80bed53208e8130e1ed43d90103026fa64bc57b51343480006386be903e903e9034c7f500743e9034cfcc0409840944090408db05a3a2fe9020404075c01640b44078b6cf1b19a00402000c54745354745304de01d072d721d200d200fa4021103450666f04f86102f862ed44d0d200018e1afa40fa40fa40d31fd401d0fa40d33f3010261025102410236c168e8bfa40810101d7005902d101e207925f07e005d70d1ff2e082218210ecb876ebbae302218210c2b41d43bae302218210d0e3be76ba0405060700ee8d08600000000000000000000000000000000000000000000000000000000000000000048d08600000000000000000000000000000000000000000000000000000000000000000048d086000000000000000000000000000000000000000000000000000000000000000000441401382238d7ea4c6800000c43132343403fa40fa40fa40d33f30810ba18d086000000000000000000000000000000000000000000000000000000000000000000416c70515f2f481114df84227c705f2f410254403c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54005a31fa403081114df8425006c70515f2f410355512c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed5403fa8e2d316c12fa403081114df84225c705f2f410354143c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54e0218210da2f907fba8e2d313504fa403081114df84225c705f2f410354403c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54e0218210f4f3a602bae3022182106a11c484bae3020108090b005e313605d33f308200cab5f84224c705f2f41035443012c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed5401e031810101d700f404f404f404810101d700fa40d20055603781114df8422cc705917f95f8422ac705e2f2f48200eb0df8416f24135f032ebef2f45505c8cf8580ca00cf8440ce01fa028069cf40025c6e016eb0935bcf819d58cf8680cf8480f400f400cf81e2f400c901fb00103555120a0032c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed5400c68210946a98b6ba8e54d33f30c8018210aff90f5758cb1fcb3fc910461035443012f84270705003804201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54e05f07f2c082ff52090b', 'hex'))[0];
+    const builder = beginCell();
     builder.storeUint(0, 1);
-    initRegistry_init_args({ $$type: 'Registry_init_args', registryId })(builder);
+    initDao_init_args({ $$type: 'Dao_init_args', registry, daoIndex })(builder);
     const __data = builder.endCell();
     return { code: __code, data: __data };
 }
 
-const Registry_errors: { [key: number]: { message: string } } = {
-    2: { message: `Stack undeflow` },
-    3: { message: `Stack overflow` },
-    4: { message: `Integer overflow` },
-    5: { message: `Integer out of expected range` },
-    6: { message: `Invalid opcode` },
-    7: { message: `Type check error` },
-    8: { message: `Cell overflow` },
-    9: { message: `Cell underflow` },
-    10: { message: `Dictionary error` },
-    13: { message: `Out of gas error` },
-    32: { message: `Method ID not found` },
-    34: { message: `Action is invalid or not supported` },
-    37: { message: `Not enough TON` },
-    38: { message: `Not enough extra-currencies` },
-    128: { message: `Null reference exception` },
-    129: { message: `Invalid serialization prefix` },
-    130: { message: `Invalid incoming message` },
-    131: { message: `Constraints error` },
-    132: { message: `Access denied` },
-    133: { message: `Contract stopped` },
-    134: { message: `Invalid argument` },
-    135: { message: `Code of a contract was not found` },
-    136: { message: `Invalid address` },
-    137: { message: `Masterchain support is not enabled for this contract` },
-    2977: { message: `Already initialized` },
-    4429: { message: `Invalid sender` },
-    4600: { message: `Only admin can set the create dao fee` },
-    8645: { message: `Only admin can set the dao fwd msg fee` },
-    23452: { message: `Only admin can set new registry admin` },
-    46336: { message: `Below min fee for create dao` },
-    51893: { message: `Only registry can change fwd msg fee` },
-    56012: { message: `Only admin can set the new dao fwd msg fee` },
-    60173: { message: `Below min fee for dao forward message` },
-}
+export const Dao_errors = {
+    2: { message: "Stack underflow" },
+    3: { message: "Stack overflow" },
+    4: { message: "Integer overflow" },
+    5: { message: "Integer out of expected range" },
+    6: { message: "Invalid opcode" },
+    7: { message: "Type check error" },
+    8: { message: "Cell overflow" },
+    9: { message: "Cell underflow" },
+    10: { message: "Dictionary error" },
+    11: { message: "'Unknown' error" },
+    12: { message: "Fatal error" },
+    13: { message: "Out of gas error" },
+    14: { message: "Virtualization error" },
+    32: { message: "Action list is invalid" },
+    33: { message: "Action list is too long" },
+    34: { message: "Action is invalid or not supported" },
+    35: { message: "Invalid source address in outbound message" },
+    36: { message: "Invalid destination address in outbound message" },
+    37: { message: "Not enough Toncoin" },
+    38: { message: "Not enough extra currencies" },
+    39: { message: "Outbound message does not fit into a cell after rewriting" },
+    40: { message: "Cannot process a message" },
+    41: { message: "Library reference is null" },
+    42: { message: "Library change action error" },
+    43: { message: "Exceeded maximum number of cells in the library or the maximum depth of the Merkle tree" },
+    50: { message: "Account state size exceeded limits" },
+    128: { message: "Null reference exception" },
+    129: { message: "Invalid serialization prefix" },
+    130: { message: "Invalid incoming message" },
+    131: { message: "Constraints error" },
+    132: { message: "Access denied" },
+    133: { message: "Contract stopped" },
+    134: { message: "Invalid argument" },
+    135: { message: "Code of a contract was not found" },
+    136: { message: "Invalid standard address" },
+    138: { message: "Not a basechain address" },
+    2977: { message: "Already initialized" },
+    4429: { message: "Invalid sender" },
+    4600: { message: "Only admin can set the create dao fee" },
+    8645: { message: "Only admin can set the dao fwd msg fee" },
+    23452: { message: "Only admin can set new registry admin" },
+    35403: { message: "Only admin can deploy dao" },
+    46336: { message: "Below min fee for create dao" },
+    51893: { message: "Only registry can change fwd msg fee" },
+    56012: { message: "Only admin can set the new dao fwd msg fee" },
+    60173: { message: "Below min fee for dao forward message" },
+} as const
 
-const Registry_types: ABIType[] = [
+export const Dao_errors_backward = {
+    "Stack underflow": 2,
+    "Stack overflow": 3,
+    "Integer overflow": 4,
+    "Integer out of expected range": 5,
+    "Invalid opcode": 6,
+    "Type check error": 7,
+    "Cell overflow": 8,
+    "Cell underflow": 9,
+    "Dictionary error": 10,
+    "'Unknown' error": 11,
+    "Fatal error": 12,
+    "Out of gas error": 13,
+    "Virtualization error": 14,
+    "Action list is invalid": 32,
+    "Action list is too long": 33,
+    "Action is invalid or not supported": 34,
+    "Invalid source address in outbound message": 35,
+    "Invalid destination address in outbound message": 36,
+    "Not enough Toncoin": 37,
+    "Not enough extra currencies": 38,
+    "Outbound message does not fit into a cell after rewriting": 39,
+    "Cannot process a message": 40,
+    "Library reference is null": 41,
+    "Library change action error": 42,
+    "Exceeded maximum number of cells in the library or the maximum depth of the Merkle tree": 43,
+    "Account state size exceeded limits": 50,
+    "Null reference exception": 128,
+    "Invalid serialization prefix": 129,
+    "Invalid incoming message": 130,
+    "Constraints error": 131,
+    "Access denied": 132,
+    "Contract stopped": 133,
+    "Invalid argument": 134,
+    "Code of a contract was not found": 135,
+    "Invalid standard address": 136,
+    "Not a basechain address": 138,
+    "Already initialized": 2977,
+    "Invalid sender": 4429,
+    "Only admin can set the create dao fee": 4600,
+    "Only admin can set the dao fwd msg fee": 8645,
+    "Only admin can set new registry admin": 23452,
+    "Only admin can deploy dao": 35403,
+    "Below min fee for create dao": 46336,
+    "Only registry can change fwd msg fee": 51893,
+    "Only admin can set the new dao fwd msg fee": 56012,
+    "Below min fee for dao forward message": 60173,
+} as const
+
+const Dao_types: ABIType[] = [
+    {"name":"DataSize","header":null,"fields":[{"name":"cells","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bits","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"refs","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
+    {"name":"SignedBundle","header":null,"fields":[{"name":"signature","type":{"kind":"simple","type":"fixed-bytes","optional":false,"format":64}},{"name":"signedData","type":{"kind":"simple","type":"slice","optional":false,"format":"remainder"}}]},
     {"name":"StateInit","header":null,"fields":[{"name":"code","type":{"kind":"simple","type":"cell","optional":false}},{"name":"data","type":{"kind":"simple","type":"cell","optional":false}}]},
-    {"name":"Context","header":null,"fields":[{"name":"bounced","type":{"kind":"simple","type":"bool","optional":false}},{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"value","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"raw","type":{"kind":"simple","type":"slice","optional":false}}]},
-    {"name":"SendParameters","header":null,"fields":[{"name":"bounce","type":{"kind":"simple","type":"bool","optional":false}},{"name":"to","type":{"kind":"simple","type":"address","optional":false}},{"name":"value","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"mode","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"body","type":{"kind":"simple","type":"cell","optional":true}},{"name":"code","type":{"kind":"simple","type":"cell","optional":true}},{"name":"data","type":{"kind":"simple","type":"cell","optional":true}}]},
+    {"name":"Context","header":null,"fields":[{"name":"bounceable","type":{"kind":"simple","type":"bool","optional":false}},{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"value","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"raw","type":{"kind":"simple","type":"slice","optional":false}}]},
+    {"name":"SendParameters","header":null,"fields":[{"name":"mode","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"body","type":{"kind":"simple","type":"cell","optional":true}},{"name":"code","type":{"kind":"simple","type":"cell","optional":true}},{"name":"data","type":{"kind":"simple","type":"cell","optional":true}},{"name":"value","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"to","type":{"kind":"simple","type":"address","optional":false}},{"name":"bounce","type":{"kind":"simple","type":"bool","optional":false}}]},
+    {"name":"MessageParameters","header":null,"fields":[{"name":"mode","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"body","type":{"kind":"simple","type":"cell","optional":true}},{"name":"value","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"to","type":{"kind":"simple","type":"address","optional":false}},{"name":"bounce","type":{"kind":"simple","type":"bool","optional":false}}]},
+    {"name":"DeployParameters","header":null,"fields":[{"name":"mode","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"body","type":{"kind":"simple","type":"cell","optional":true}},{"name":"value","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"bounce","type":{"kind":"simple","type":"bool","optional":false}},{"name":"init","type":{"kind":"simple","type":"StateInit","optional":false}}]},
+    {"name":"StdAddress","header":null,"fields":[{"name":"workchain","type":{"kind":"simple","type":"int","optional":false,"format":8}},{"name":"address","type":{"kind":"simple","type":"uint","optional":false,"format":256}}]},
+    {"name":"VarAddress","header":null,"fields":[{"name":"workchain","type":{"kind":"simple","type":"int","optional":false,"format":32}},{"name":"address","type":{"kind":"simple","type":"slice","optional":false}}]},
+    {"name":"BasechainAddress","header":null,"fields":[{"name":"hash","type":{"kind":"simple","type":"int","optional":true,"format":257}}]},
     {"name":"Deploy","header":2490013878,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"DeployOk","header":2952335191,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"FactoryDeploy","header":1829761339,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"cashback","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"ChangeOwner","header":2174598809,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newOwner","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"ChangeOwnerOk","header":846932810,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newOwner","type":{"kind":"simple","type":"address","optional":false}}]},
-    {"name":"RouteDeployAndInitDao","header":739290419,"fields":[{"name":"prodMsgValue","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"devMsgValue","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"prodRegistry","type":{"kind":"simple","type":"address","optional":false}},{"name":"devRegistry","type":{"kind":"simple","type":"address","optional":false}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"proposalOwner","type":{"kind":"simple","type":"address","optional":false}},{"name":"metadata","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"DeployAndInitDao","header":3378223972,"fields":[{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"proposalOwner","type":{"kind":"simple","type":"address","optional":false}},{"name":"metadata","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"SendDaoInit","header":3367586747,"fields":[{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"proposalOwner","type":{"kind":"simple","type":"address","optional":false}},{"name":"metadata","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"SetDeployAndInitDaoFee","header":2828439833,"fields":[{"name":"newDeployAndInitDaoFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
@@ -1238,77 +1913,110 @@ const Registry_types: ABIType[] = [
     {"name":"SendToDaoSetFwdMsgFee","header":1477819782,"fields":[{"name":"daoId","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"newFwdMsgFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"SetRegistryAdmin","header":3335943114,"fields":[{"name":"newAdmin","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"RegistryContractState","header":null,"fields":[{"name":"registryId","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"nextDaoId","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"admin","type":{"kind":"simple","type":"address","optional":false}},{"name":"deployAndInitDaoFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newDaosfwdMsgFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
+    {"name":"Dao$Data","header":null,"fields":[{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"registry","type":{"kind":"simple","type":"address","optional":false}},{"name":"proposalOwner","type":{"kind":"simple","type":"address","optional":false}},{"name":"daoIndex","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"metadata","type":{"kind":"simple","type":"address","optional":false}},{"name":"fwdMsgFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"SetOwner","header":3266583875,"fields":[{"name":"newOwner","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"SetProposalOwner","header":3504586358,"fields":[{"name":"newProposalOwner","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"SetFwdMsgFee","header":4109608450,"fields":[{"name":"newFwdMsgFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"SetMetadata","header":3660550271,"fields":[{"name":"newMetadata","type":{"kind":"simple","type":"address","optional":false}}]},
-    {"name":"FwdMsg","header":1690551268,"fields":[{"name":"fwdMsg","type":{"kind":"simple","type":"SendParameters","optional":false}}]},
+    {"name":"FwdMsg","header":1779549316,"fields":[{"name":"fwdMsg","type":{"kind":"simple","type":"SendParameters","optional":false}}]},
     {"name":"DaoInit","header":3971512043,"fields":[{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"proposalOwner","type":{"kind":"simple","type":"address","optional":false}},{"name":"metadata","type":{"kind":"simple","type":"address","optional":false}},{"name":"fwdMsgFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"DaoContractState","header":null,"fields":[{"name":"registry","type":{"kind":"simple","type":"address","optional":false}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"proposalOwner","type":{"kind":"simple","type":"address","optional":false}},{"name":"metadata","type":{"kind":"simple","type":"address","optional":false}},{"name":"daoIndex","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"fwdMsgFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
+    {"name":"Registry$Data","header":null,"fields":[{"name":"registryId","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"nextDaoId","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"admin","type":{"kind":"simple","type":"address","optional":false}},{"name":"deployAndInitDaoFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newDaosfwdMsgFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
 ]
 
-const Registry_getters: ABIGetter[] = [
-    {"name":"state","arguments":[],"returnType":{"kind":"simple","type":"RegistryContractState","optional":false}},
-    {"name":"nextDaoId","arguments":[],"returnType":{"kind":"simple","type":"int","optional":false,"format":257}},
-    {"name":"daoAddress","arguments":[{"name":"daoId","type":{"kind":"simple","type":"int","optional":false,"format":257}}],"returnType":{"kind":"simple","type":"address","optional":false}},
+const Dao_opcodes = {
+    "Deploy": 2490013878,
+    "DeployOk": 2952335191,
+    "FactoryDeploy": 1829761339,
+    "ChangeOwner": 2174598809,
+    "ChangeOwnerOk": 846932810,
+    "DeployAndInitDao": 3378223972,
+    "SendDaoInit": 3367586747,
+    "SetDeployAndInitDaoFee": 2828439833,
+    "SetNewDaoFwdMsgFee": 60181454,
+    "SendToDaoSetFwdMsgFee": 1477819782,
+    "SetRegistryAdmin": 3335943114,
+    "SetOwner": 3266583875,
+    "SetProposalOwner": 3504586358,
+    "SetFwdMsgFee": 4109608450,
+    "SetMetadata": 3660550271,
+    "FwdMsg": 1779549316,
+    "DaoInit": 3971512043,
+}
+
+const Dao_getters: ABIGetter[] = [
+    {"name":"state","methodId":77589,"arguments":[],"returnType":{"kind":"simple","type":"DaoContractState","optional":false}},
 ]
 
-const Registry_receivers: ABIReceiver[] = [
-    {"receiver":"internal","message":{"kind":"typed","type":"DeployAndInitDao"}},
-    {"receiver":"internal","message":{"kind":"typed","type":"SetDeployAndInitDaoFee"}},
-    {"receiver":"internal","message":{"kind":"typed","type":"SetNewDaoFwdMsgFee"}},
-    {"receiver":"internal","message":{"kind":"typed","type":"SendToDaoSetFwdMsgFee"}},
-    {"receiver":"internal","message":{"kind":"typed","type":"SetRegistryAdmin"}},
+export const Dao_getterMapping: { [key: string]: string } = {
+    'state': 'getState',
+}
+
+const Dao_receivers: ABIReceiver[] = [
+    {"receiver":"internal","message":{"kind":"typed","type":"DaoInit"}},
+    {"receiver":"internal","message":{"kind":"typed","type":"SetOwner"}},
+    {"receiver":"internal","message":{"kind":"typed","type":"SetProposalOwner"}},
+    {"receiver":"internal","message":{"kind":"typed","type":"SetMetadata"}},
+    {"receiver":"internal","message":{"kind":"typed","type":"SetFwdMsgFee"}},
+    {"receiver":"internal","message":{"kind":"typed","type":"FwdMsg"}},
     {"receiver":"internal","message":{"kind":"typed","type":"Deploy"}},
 ]
 
-export class Registry implements Contract {
+
+export class Dao implements Contract {
     
-    static async init(registryId: bigint) {
-        return await Registry_init(registryId);
+    public static readonly storageReserve = 0n;
+    public static readonly errors = Dao_errors_backward;
+    public static readonly opcodes = Dao_opcodes;
+    
+    static async init(registry: Address, daoIndex: bigint) {
+        return await Dao_init(registry, daoIndex);
     }
     
-    static async fromInit(registryId: bigint) {
-        const init = await Registry_init(registryId);
-        const address = contractAddress(0, init);
-        return new Registry(address, init);
+    static async fromInit(registry: Address, daoIndex: bigint) {
+        const __gen_init = await Dao_init(registry, daoIndex);
+        const address = contractAddress(0, __gen_init);
+        return new Dao(address, __gen_init);
     }
     
     static fromAddress(address: Address) {
-        return new Registry(address);
+        return new Dao(address);
     }
     
     readonly address: Address; 
     readonly init?: { code: Cell, data: Cell };
     readonly abi: ContractABI = {
-        types:  Registry_types,
-        getters: Registry_getters,
-        receivers: Registry_receivers,
-        errors: Registry_errors,
+        types:  Dao_types,
+        getters: Dao_getters,
+        receivers: Dao_receivers,
+        errors: Dao_errors,
     };
     
-    private constructor(address: Address, init?: { code: Cell, data: Cell }) {
+    constructor(address: Address, init?: { code: Cell, data: Cell }) {
         this.address = address;
         this.init = init;
     }
     
-    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: DeployAndInitDao | SetDeployAndInitDaoFee | SetNewDaoFwdMsgFee | SendToDaoSetFwdMsgFee | SetRegistryAdmin | Deploy) {
+    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: DaoInit | SetOwner | SetProposalOwner | SetMetadata | SetFwdMsgFee | FwdMsg | Deploy) {
         
         let body: Cell | null = null;
-        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'DeployAndInitDao') {
-            body = beginCell().store(storeDeployAndInitDao(message)).endCell();
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'DaoInit') {
+            body = beginCell().store(storeDaoInit(message)).endCell();
         }
-        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SetDeployAndInitDaoFee') {
-            body = beginCell().store(storeSetDeployAndInitDaoFee(message)).endCell();
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SetOwner') {
+            body = beginCell().store(storeSetOwner(message)).endCell();
         }
-        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SetNewDaoFwdMsgFee') {
-            body = beginCell().store(storeSetNewDaoFwdMsgFee(message)).endCell();
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SetProposalOwner') {
+            body = beginCell().store(storeSetProposalOwner(message)).endCell();
         }
-        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SendToDaoSetFwdMsgFee') {
-            body = beginCell().store(storeSendToDaoSetFwdMsgFee(message)).endCell();
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SetMetadata') {
+            body = beginCell().store(storeSetMetadata(message)).endCell();
         }
-        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SetRegistryAdmin') {
-            body = beginCell().store(storeSetRegistryAdmin(message)).endCell();
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SetFwdMsgFee') {
+            body = beginCell().store(storeSetFwdMsgFee(message)).endCell();
+        }
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'FwdMsg') {
+            body = beginCell().store(storeFwdMsg(message)).endCell();
         }
         if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'Deploy') {
             body = beginCell().store(storeDeploy(message)).endCell();
@@ -1320,24 +2028,9 @@ export class Registry implements Contract {
     }
     
     async getState(provider: ContractProvider) {
-        let builder = new TupleBuilder();
-        let source = (await provider.get('state', builder.build())).stack;
-        const result = loadTupleRegistryContractState(source);
-        return result;
-    }
-    
-    async getNextDaoId(provider: ContractProvider) {
-        let builder = new TupleBuilder();
-        let source = (await provider.get('nextDaoId', builder.build())).stack;
-        let result = source.readBigNumber();
-        return result;
-    }
-    
-    async getDaoAddress(provider: ContractProvider, daoId: bigint) {
-        let builder = new TupleBuilder();
-        builder.writeNumber(daoId);
-        let source = (await provider.get('daoAddress', builder.build())).stack;
-        let result = source.readAddress();
+        const builder = new TupleBuilder();
+        const source = (await provider.get('state', builder.build())).stack;
+        const result = loadGetterTupleDaoContractState(source);
         return result;
     }
     
