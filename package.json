@@ -1,7 +1,7 @@
 {
   "name": "tmd-vote-contracts-sdk",
   "description": "sdk for ton vote contracts",
-  "version": "1.9.3",
+  "version": "1.9.4",
   "license": "MIT",
   "author": "Ami Hazbany",
   "main": "dist/src/index.js",
