@@ -276,44 +276,26 @@ export async function newProposal(sender: Sender, client : TonClient, fee: strin
         return false;
     }
 
-    let code: Cell | null = proposalDeployerContract.init.code;
-    let data: Cell | null = proposalDeployerContract.init.data;
     let nextProposalId = BigInt(0);
 
     if (await client.isContractDeployed(proposalDeployerContract.address)) {
-        code = null;
-        data = null;
         nextProposalId = await proposalDeployerContract.getNextProposalId();
     }
-
-    await daoContract.send(sender, { value: toNano(fee) }, 
-        { 
-            $$type: 'FwdMsg', fwdMsg: {
-                $$type: 'SendParameters', 
-                bounce: true,
-                to: proposalDeployerContract.address,
-                value: toNano(0),
-                mode: BigInt(64),
-                body: beginCell().store(storeDeployAndInitProposal({
-                    $$type: 'DeployAndInitProposal',
-                    body: {
-                        $$type: 'Params',
-                        proposalStartTime: BigInt(proposalMetadata.proposalStartTime),
-                        proposalEndTime: BigInt(proposalMetadata.proposalEndTime),
-                        proposalSnapshotTime: BigInt(proposalMetadata.proposalSnapshotTime),
-                        votingSystem: JSON.stringify(proposalMetadata.votingSystem),
-                        votingPowerStrategies: JSON.stringify(proposalMetadata.votingPowerStrategies),
-                        title: proposalMetadata.title,
-                        description: proposalMetadata.description,
-                        quorum: proposalMetadata.quorum,
-                        hide: proposalMetadata.hide
-                    }
-                })).endCell(),
-                code: code,
-                data: data
-            }
+     
+    await daoContract.send(sender, {value: toNano(fee)}, {
+        $$type: 'DeployOrUpdateProposal', body: {
+            $$type: 'Params',
+            proposalStartTime: BigInt(proposalMetadata.proposalStartTime),
+            proposalEndTime: BigInt(proposalMetadata.proposalEndTime),
+            proposalSnapshotTime: BigInt(proposalMetadata.proposalSnapshotTime),
+            votingSystem: JSON.stringify(proposalMetadata.votingSystem),
+            votingPowerStrategies: JSON.stringify(proposalMetadata.votingPowerStrategies),
+            title: proposalMetadata.title,
+            description: proposalMetadata.description,
+            quorum: proposalMetadata.quorum,
+            hide: proposalMetadata.hide
         }
-    );      
+    })
 
     await waitForContractToBeDeployed(client, proposalDeployerContract.address);
     await waitForConditionChange(proposalDeployerContract.getNextProposalId, [], nextProposalId, 'nextProposalId');
@@ -355,35 +337,20 @@ export async function updateProposal(sender: Sender, client : TonClient, fee: st
         return false;
     }
 
-    await daoContract.send(sender, { value: toNano(fee) }, 
-        { 
-            $$type: 'FwdMsg', fwdMsg: {
-                $$type: 'SendParameters', 
-                bounce: true,
-                to: proposalDeployerContract.address,
-                value: toNano(0),
-                mode: BigInt(64),
-                body: beginCell().store(storeSendUpdateProposal({
-                    $$type: 'SendUpdateProposal',
-                    proposalAddress: Address.parse(proposalAddr),
-                    updateParams: {
-                        $$type: 'Params',
-                        proposalStartTime: BigInt(updateParams.proposalStartTime),
-                        proposalEndTime: BigInt(updateParams.proposalEndTime),
-                        proposalSnapshotTime: BigInt(updateParams.proposalSnapshotTime),
-                        votingSystem: JSON.stringify(updateParams.votingSystem),
-                        votingPowerStrategies: JSON.stringify(updateParams.votingPowerStrategies),
-                        title: updateParams.title,
-                        description: updateParams.description,
-                        quorum: updateParams.quorum,
-                        hide: updateParams.hide
-                    }
-                })).endCell(),
-                code: null,
-                data: null
-            }
+    await daoContract.send(sender, {value: toNano(fee)}, {
+        $$type: 'DeployOrUpdateProposal', body: {
+            $$type: 'Params',
+            proposalStartTime: BigInt(updateParams.proposalStartTime),
+            proposalEndTime: BigInt(updateParams.proposalEndTime),
+            proposalSnapshotTime: BigInt(updateParams.proposalSnapshotTime),
+            votingSystem: JSON.stringify(updateParams.votingSystem),
+            votingPowerStrategies: JSON.stringify(updateParams.votingPowerStrategies),
+            title: updateParams.title,
+            description: updateParams.description,
+            quorum: updateParams.quorum,
+            hide: updateParams.hide
         }
-    );
+    })
     
     return true;
 }
