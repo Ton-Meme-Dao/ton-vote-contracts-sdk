@@ -283,7 +283,7 @@ export async function newProposal(sender: Sender, client : TonClient, fee: strin
     }
      
     await daoContract.send(sender, {value: toNano(fee)}, {
-        $$type: 'DeployOrUpdateProposal', body: {
+        $$type: 'DeployAndInitProposal', body: {
             $$type: 'Params',
             proposalStartTime: BigInt(proposalMetadata.proposalStartTime),
             proposalEndTime: BigInt(proposalMetadata.proposalEndTime),
@@ -338,7 +338,9 @@ export async function updateProposal(sender: Sender, client : TonClient, fee: st
     }
 
     await daoContract.send(sender, {value: toNano(fee)}, {
-        $$type: 'DeployOrUpdateProposal', body: {
+        $$type: 'SendUpdateProposal',
+        proposalAddress: Address.parse(proposalAddr),
+        updateParams: {
             $$type: 'Params',
             proposalStartTime: BigInt(updateParams.proposalStartTime),
             proposalEndTime: BigInt(updateParams.proposalEndTime),
