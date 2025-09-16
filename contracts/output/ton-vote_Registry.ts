@@ -20,7 +20,7 @@ import {
     TupleBuilder,
     DictionaryValue
 } from 'ton-core';
-    
+
 export type DataSize = {
     $$type: 'DataSize';
     cells: bigint;
@@ -1509,49 +1509,49 @@ export function dictValueParserSetMetadata(): DictionaryValue<SetMetadata> {
     }
 }
 
-export type FwdMsg = {
-    $$type: 'FwdMsg';
-    fwdMsg: SendParameters;
+export type DeployOrUpdateProposal = {
+    $$type: 'DeployOrUpdateProposal';
+    body: Params;
 }
 
-export function storeFwdMsg(src: FwdMsg) {
+export function storeDeployOrUpdateProposal(src: DeployOrUpdateProposal) {
     return (builder: Builder) => {
         const b_0 = builder;
-        b_0.storeUint(1779549316, 32);
-        b_0.store(storeSendParameters(src.fwdMsg));
+        b_0.storeUint(1219867299, 32);
+        b_0.store(storeParams(src.body));
     };
 }
 
-export function loadFwdMsg(slice: Slice) {
+export function loadDeployOrUpdateProposal(slice: Slice) {
     const sc_0 = slice;
-    if (sc_0.loadUint(32) !== 1779549316) { throw Error('Invalid prefix'); }
-    const _fwdMsg = loadSendParameters(sc_0);
-    return { $$type: 'FwdMsg' as const, fwdMsg: _fwdMsg };
+    if (sc_0.loadUint(32) !== 1219867299) { throw Error('Invalid prefix'); }
+    const _body = loadParams(sc_0);
+    return { $$type: 'DeployOrUpdateProposal' as const, body: _body };
 }
 
-export function loadTupleFwdMsg(source: TupleReader) {
-    const _fwdMsg = loadTupleSendParameters(source);
-    return { $$type: 'FwdMsg' as const, fwdMsg: _fwdMsg };
+export function loadTupleDeployOrUpdateProposal(source: TupleReader) {
+    const _body = loadTupleParams(source);
+    return { $$type: 'DeployOrUpdateProposal' as const, body: _body };
 }
 
-export function loadGetterTupleFwdMsg(source: TupleReader) {
-    const _fwdMsg = loadGetterTupleSendParameters(source);
-    return { $$type: 'FwdMsg' as const, fwdMsg: _fwdMsg };
+export function loadGetterTupleDeployOrUpdateProposal(source: TupleReader) {
+    const _body = loadGetterTupleParams(source);
+    return { $$type: 'DeployOrUpdateProposal' as const, body: _body };
 }
 
-export function storeTupleFwdMsg(source: FwdMsg) {
+export function storeTupleDeployOrUpdateProposal(source: DeployOrUpdateProposal) {
     const builder = new TupleBuilder();
-    builder.writeTuple(storeTupleSendParameters(source.fwdMsg));
+    builder.writeTuple(storeTupleParams(source.body));
     return builder.build();
 }
 
-export function dictValueParserFwdMsg(): DictionaryValue<FwdMsg> {
+export function dictValueParserDeployOrUpdateProposal(): DictionaryValue<DeployOrUpdateProposal> {
     return {
         serialize: (src, builder) => {
-            builder.storeRef(beginCell().store(storeFwdMsg(src)).endCell());
+            builder.storeRef(beginCell().store(storeDeployOrUpdateProposal(src)).endCell());
         },
         parse: (src) => {
-            return loadFwdMsg(src.loadRef().beginParse());
+            return loadDeployOrUpdateProposal(src.loadRef().beginParse());
         }
     }
 }
@@ -1699,6 +1699,657 @@ export function dictValueParserDaoContractState(): DictionaryValue<DaoContractSt
     }
 }
 
+export type ProposalDeployer$Data = {
+    $$type: 'ProposalDeployer$Data';
+    dao: Address;
+    nextProposalId: bigint;
+}
+
+export function storeProposalDeployer$Data(src: ProposalDeployer$Data) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeAddress(src.dao);
+        b_0.storeUint(src.nextProposalId, 32);
+    };
+}
+
+export function loadProposalDeployer$Data(slice: Slice) {
+    const sc_0 = slice;
+    const _dao = sc_0.loadAddress();
+    const _nextProposalId = sc_0.loadUintBig(32);
+    return { $$type: 'ProposalDeployer$Data' as const, dao: _dao, nextProposalId: _nextProposalId };
+}
+
+export function loadTupleProposalDeployer$Data(source: TupleReader) {
+    const _dao = source.readAddress();
+    const _nextProposalId = source.readBigNumber();
+    return { $$type: 'ProposalDeployer$Data' as const, dao: _dao, nextProposalId: _nextProposalId };
+}
+
+export function loadGetterTupleProposalDeployer$Data(source: TupleReader) {
+    const _dao = source.readAddress();
+    const _nextProposalId = source.readBigNumber();
+    return { $$type: 'ProposalDeployer$Data' as const, dao: _dao, nextProposalId: _nextProposalId };
+}
+
+export function storeTupleProposalDeployer$Data(source: ProposalDeployer$Data) {
+    const builder = new TupleBuilder();
+    builder.writeAddress(source.dao);
+    builder.writeNumber(source.nextProposalId);
+    return builder.build();
+}
+
+export function dictValueParserProposalDeployer$Data(): DictionaryValue<ProposalDeployer$Data> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeProposalDeployer$Data(src)).endCell());
+        },
+        parse: (src) => {
+            return loadProposalDeployer$Data(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type Params = {
+    $$type: 'Params';
+    proposalStartTime: bigint;
+    proposalEndTime: bigint;
+    proposalSnapshotTime: bigint;
+    votingSystem: string;
+    votingPowerStrategies: string;
+    title: string;
+    description: string;
+    quorum: string;
+    hide: boolean;
+}
+
+export function storeParams(src: Params) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeUint(src.proposalStartTime, 64);
+        b_0.storeUint(src.proposalEndTime, 64);
+        b_0.storeUint(src.proposalSnapshotTime, 64);
+        b_0.storeStringRefTail(src.votingSystem);
+        b_0.storeStringRefTail(src.votingPowerStrategies);
+        const b_1 = new Builder();
+        b_1.storeStringRefTail(src.title);
+        b_1.storeStringRefTail(src.description);
+        b_1.storeStringRefTail(src.quorum);
+        b_1.storeBit(src.hide);
+        b_0.storeRef(b_1.endCell());
+    };
+}
+
+export function loadParams(slice: Slice) {
+    const sc_0 = slice;
+    const _proposalStartTime = sc_0.loadUintBig(64);
+    const _proposalEndTime = sc_0.loadUintBig(64);
+    const _proposalSnapshotTime = sc_0.loadUintBig(64);
+    const _votingSystem = sc_0.loadStringRefTail();
+    const _votingPowerStrategies = sc_0.loadStringRefTail();
+    const sc_1 = sc_0.loadRef().beginParse();
+    const _title = sc_1.loadStringRefTail();
+    const _description = sc_1.loadStringRefTail();
+    const _quorum = sc_1.loadStringRefTail();
+    const _hide = sc_1.loadBit();
+    return { $$type: 'Params' as const, proposalStartTime: _proposalStartTime, proposalEndTime: _proposalEndTime, proposalSnapshotTime: _proposalSnapshotTime, votingSystem: _votingSystem, votingPowerStrategies: _votingPowerStrategies, title: _title, description: _description, quorum: _quorum, hide: _hide };
+}
+
+export function loadTupleParams(source: TupleReader) {
+    const _proposalStartTime = source.readBigNumber();
+    const _proposalEndTime = source.readBigNumber();
+    const _proposalSnapshotTime = source.readBigNumber();
+    const _votingSystem = source.readString();
+    const _votingPowerStrategies = source.readString();
+    const _title = source.readString();
+    const _description = source.readString();
+    const _quorum = source.readString();
+    const _hide = source.readBoolean();
+    return { $$type: 'Params' as const, proposalStartTime: _proposalStartTime, proposalEndTime: _proposalEndTime, proposalSnapshotTime: _proposalSnapshotTime, votingSystem: _votingSystem, votingPowerStrategies: _votingPowerStrategies, title: _title, description: _description, quorum: _quorum, hide: _hide };
+}
+
+export function loadGetterTupleParams(source: TupleReader) {
+    const _proposalStartTime = source.readBigNumber();
+    const _proposalEndTime = source.readBigNumber();
+    const _proposalSnapshotTime = source.readBigNumber();
+    const _votingSystem = source.readString();
+    const _votingPowerStrategies = source.readString();
+    const _title = source.readString();
+    const _description = source.readString();
+    const _quorum = source.readString();
+    const _hide = source.readBoolean();
+    return { $$type: 'Params' as const, proposalStartTime: _proposalStartTime, proposalEndTime: _proposalEndTime, proposalSnapshotTime: _proposalSnapshotTime, votingSystem: _votingSystem, votingPowerStrategies: _votingPowerStrategies, title: _title, description: _description, quorum: _quorum, hide: _hide };
+}
+
+export function storeTupleParams(source: Params) {
+    const builder = new TupleBuilder();
+    builder.writeNumber(source.proposalStartTime);
+    builder.writeNumber(source.proposalEndTime);
+    builder.writeNumber(source.proposalSnapshotTime);
+    builder.writeString(source.votingSystem);
+    builder.writeString(source.votingPowerStrategies);
+    builder.writeString(source.title);
+    builder.writeString(source.description);
+    builder.writeString(source.quorum);
+    builder.writeBoolean(source.hide);
+    return builder.build();
+}
+
+export function dictValueParserParams(): DictionaryValue<Params> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeParams(src)).endCell());
+        },
+        parse: (src) => {
+            return loadParams(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type ProposalInit = {
+    $$type: 'ProposalInit';
+    body: Params;
+}
+
+export function storeProposalInit(src: ProposalInit) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeUint(1008560988, 32);
+        b_0.store(storeParams(src.body));
+    };
+}
+
+export function loadProposalInit(slice: Slice) {
+    const sc_0 = slice;
+    if (sc_0.loadUint(32) !== 1008560988) { throw Error('Invalid prefix'); }
+    const _body = loadParams(sc_0);
+    return { $$type: 'ProposalInit' as const, body: _body };
+}
+
+export function loadTupleProposalInit(source: TupleReader) {
+    const _body = loadTupleParams(source);
+    return { $$type: 'ProposalInit' as const, body: _body };
+}
+
+export function loadGetterTupleProposalInit(source: TupleReader) {
+    const _body = loadGetterTupleParams(source);
+    return { $$type: 'ProposalInit' as const, body: _body };
+}
+
+export function storeTupleProposalInit(source: ProposalInit) {
+    const builder = new TupleBuilder();
+    builder.writeTuple(storeTupleParams(source.body));
+    return builder.build();
+}
+
+export function dictValueParserProposalInit(): DictionaryValue<ProposalInit> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeProposalInit(src)).endCell());
+        },
+        parse: (src) => {
+            return loadProposalInit(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type Vote = {
+    $$type: 'Vote';
+    comment: string;
+}
+
+export function storeVote(src: Vote) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeUint(2084703906, 32);
+        b_0.storeStringRefTail(src.comment);
+    };
+}
+
+export function loadVote(slice: Slice) {
+    const sc_0 = slice;
+    if (sc_0.loadUint(32) !== 2084703906) { throw Error('Invalid prefix'); }
+    const _comment = sc_0.loadStringRefTail();
+    return { $$type: 'Vote' as const, comment: _comment };
+}
+
+export function loadTupleVote(source: TupleReader) {
+    const _comment = source.readString();
+    return { $$type: 'Vote' as const, comment: _comment };
+}
+
+export function loadGetterTupleVote(source: TupleReader) {
+    const _comment = source.readString();
+    return { $$type: 'Vote' as const, comment: _comment };
+}
+
+export function storeTupleVote(source: Vote) {
+    const builder = new TupleBuilder();
+    builder.writeString(source.comment);
+    return builder.build();
+}
+
+export function dictValueParserVote(): DictionaryValue<Vote> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeVote(src)).endCell());
+        },
+        parse: (src) => {
+            return loadVote(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type UpdateProposal = {
+    $$type: 'UpdateProposal';
+    updateParams: Params;
+}
+
+export function storeUpdateProposal(src: UpdateProposal) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeUint(817223820, 32);
+        b_0.store(storeParams(src.updateParams));
+    };
+}
+
+export function loadUpdateProposal(slice: Slice) {
+    const sc_0 = slice;
+    if (sc_0.loadUint(32) !== 817223820) { throw Error('Invalid prefix'); }
+    const _updateParams = loadParams(sc_0);
+    return { $$type: 'UpdateProposal' as const, updateParams: _updateParams };
+}
+
+export function loadTupleUpdateProposal(source: TupleReader) {
+    const _updateParams = loadTupleParams(source);
+    return { $$type: 'UpdateProposal' as const, updateParams: _updateParams };
+}
+
+export function loadGetterTupleUpdateProposal(source: TupleReader) {
+    const _updateParams = loadGetterTupleParams(source);
+    return { $$type: 'UpdateProposal' as const, updateParams: _updateParams };
+}
+
+export function storeTupleUpdateProposal(source: UpdateProposal) {
+    const builder = new TupleBuilder();
+    builder.writeTuple(storeTupleParams(source.updateParams));
+    return builder.build();
+}
+
+export function dictValueParserUpdateProposal(): DictionaryValue<UpdateProposal> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeUpdateProposal(src)).endCell());
+        },
+        parse: (src) => {
+            return loadUpdateProposal(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type ProposalContractState = {
+    $$type: 'ProposalContractState';
+    proposalDeployer: Address;
+    id: bigint;
+    proposalStartTime: bigint;
+    proposalEndTime: bigint;
+    proposalSnapshotTime: bigint;
+    votingSystem: string;
+    votingPowerStrategies: string;
+    title: string;
+    description: string;
+    quorum: string;
+    hide: boolean;
+}
+
+export function storeProposalContractState(src: ProposalContractState) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeAddress(src.proposalDeployer);
+        b_0.storeUint(src.id, 32);
+        b_0.storeUint(src.proposalStartTime, 64);
+        b_0.storeUint(src.proposalEndTime, 64);
+        b_0.storeUint(src.proposalSnapshotTime, 64);
+        b_0.storeStringRefTail(src.votingSystem);
+        b_0.storeStringRefTail(src.votingPowerStrategies);
+        const b_1 = new Builder();
+        b_1.storeStringRefTail(src.title);
+        b_1.storeStringRefTail(src.description);
+        b_1.storeStringRefTail(src.quorum);
+        b_1.storeBit(src.hide);
+        b_0.storeRef(b_1.endCell());
+    };
+}
+
+export function loadProposalContractState(slice: Slice) {
+    const sc_0 = slice;
+    const _proposalDeployer = sc_0.loadAddress();
+    const _id = sc_0.loadUintBig(32);
+    const _proposalStartTime = sc_0.loadUintBig(64);
+    const _proposalEndTime = sc_0.loadUintBig(64);
+    const _proposalSnapshotTime = sc_0.loadUintBig(64);
+    const _votingSystem = sc_0.loadStringRefTail();
+    const _votingPowerStrategies = sc_0.loadStringRefTail();
+    const sc_1 = sc_0.loadRef().beginParse();
+    const _title = sc_1.loadStringRefTail();
+    const _description = sc_1.loadStringRefTail();
+    const _quorum = sc_1.loadStringRefTail();
+    const _hide = sc_1.loadBit();
+    return { $$type: 'ProposalContractState' as const, proposalDeployer: _proposalDeployer, id: _id, proposalStartTime: _proposalStartTime, proposalEndTime: _proposalEndTime, proposalSnapshotTime: _proposalSnapshotTime, votingSystem: _votingSystem, votingPowerStrategies: _votingPowerStrategies, title: _title, description: _description, quorum: _quorum, hide: _hide };
+}
+
+export function loadTupleProposalContractState(source: TupleReader) {
+    const _proposalDeployer = source.readAddress();
+    const _id = source.readBigNumber();
+    const _proposalStartTime = source.readBigNumber();
+    const _proposalEndTime = source.readBigNumber();
+    const _proposalSnapshotTime = source.readBigNumber();
+    const _votingSystem = source.readString();
+    const _votingPowerStrategies = source.readString();
+    const _title = source.readString();
+    const _description = source.readString();
+    const _quorum = source.readString();
+    const _hide = source.readBoolean();
+    return { $$type: 'ProposalContractState' as const, proposalDeployer: _proposalDeployer, id: _id, proposalStartTime: _proposalStartTime, proposalEndTime: _proposalEndTime, proposalSnapshotTime: _proposalSnapshotTime, votingSystem: _votingSystem, votingPowerStrategies: _votingPowerStrategies, title: _title, description: _description, quorum: _quorum, hide: _hide };
+}
+
+export function loadGetterTupleProposalContractState(source: TupleReader) {
+    const _proposalDeployer = source.readAddress();
+    const _id = source.readBigNumber();
+    const _proposalStartTime = source.readBigNumber();
+    const _proposalEndTime = source.readBigNumber();
+    const _proposalSnapshotTime = source.readBigNumber();
+    const _votingSystem = source.readString();
+    const _votingPowerStrategies = source.readString();
+    const _title = source.readString();
+    const _description = source.readString();
+    const _quorum = source.readString();
+    const _hide = source.readBoolean();
+    return { $$type: 'ProposalContractState' as const, proposalDeployer: _proposalDeployer, id: _id, proposalStartTime: _proposalStartTime, proposalEndTime: _proposalEndTime, proposalSnapshotTime: _proposalSnapshotTime, votingSystem: _votingSystem, votingPowerStrategies: _votingPowerStrategies, title: _title, description: _description, quorum: _quorum, hide: _hide };
+}
+
+export function storeTupleProposalContractState(source: ProposalContractState) {
+    const builder = new TupleBuilder();
+    builder.writeAddress(source.proposalDeployer);
+    builder.writeNumber(source.id);
+    builder.writeNumber(source.proposalStartTime);
+    builder.writeNumber(source.proposalEndTime);
+    builder.writeNumber(source.proposalSnapshotTime);
+    builder.writeString(source.votingSystem);
+    builder.writeString(source.votingPowerStrategies);
+    builder.writeString(source.title);
+    builder.writeString(source.description);
+    builder.writeString(source.quorum);
+    builder.writeBoolean(source.hide);
+    return builder.build();
+}
+
+export function dictValueParserProposalContractState(): DictionaryValue<ProposalContractState> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeProposalContractState(src)).endCell());
+        },
+        parse: (src) => {
+            return loadProposalContractState(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type DeployAndInitProposal = {
+    $$type: 'DeployAndInitProposal';
+    body: Params;
+}
+
+export function storeDeployAndInitProposal(src: DeployAndInitProposal) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeUint(1496883659, 32);
+        b_0.store(storeParams(src.body));
+    };
+}
+
+export function loadDeployAndInitProposal(slice: Slice) {
+    const sc_0 = slice;
+    if (sc_0.loadUint(32) !== 1496883659) { throw Error('Invalid prefix'); }
+    const _body = loadParams(sc_0);
+    return { $$type: 'DeployAndInitProposal' as const, body: _body };
+}
+
+export function loadTupleDeployAndInitProposal(source: TupleReader) {
+    const _body = loadTupleParams(source);
+    return { $$type: 'DeployAndInitProposal' as const, body: _body };
+}
+
+export function loadGetterTupleDeployAndInitProposal(source: TupleReader) {
+    const _body = loadGetterTupleParams(source);
+    return { $$type: 'DeployAndInitProposal' as const, body: _body };
+}
+
+export function storeTupleDeployAndInitProposal(source: DeployAndInitProposal) {
+    const builder = new TupleBuilder();
+    builder.writeTuple(storeTupleParams(source.body));
+    return builder.build();
+}
+
+export function dictValueParserDeployAndInitProposal(): DictionaryValue<DeployAndInitProposal> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeDeployAndInitProposal(src)).endCell());
+        },
+        parse: (src) => {
+            return loadDeployAndInitProposal(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type SendProposalInit = {
+    $$type: 'SendProposalInit';
+    body: Params;
+}
+
+export function storeSendProposalInit(src: SendProposalInit) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeUint(2746622614, 32);
+        b_0.store(storeParams(src.body));
+    };
+}
+
+export function loadSendProposalInit(slice: Slice) {
+    const sc_0 = slice;
+    if (sc_0.loadUint(32) !== 2746622614) { throw Error('Invalid prefix'); }
+    const _body = loadParams(sc_0);
+    return { $$type: 'SendProposalInit' as const, body: _body };
+}
+
+export function loadTupleSendProposalInit(source: TupleReader) {
+    const _body = loadTupleParams(source);
+    return { $$type: 'SendProposalInit' as const, body: _body };
+}
+
+export function loadGetterTupleSendProposalInit(source: TupleReader) {
+    const _body = loadGetterTupleParams(source);
+    return { $$type: 'SendProposalInit' as const, body: _body };
+}
+
+export function storeTupleSendProposalInit(source: SendProposalInit) {
+    const builder = new TupleBuilder();
+    builder.writeTuple(storeTupleParams(source.body));
+    return builder.build();
+}
+
+export function dictValueParserSendProposalInit(): DictionaryValue<SendProposalInit> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeSendProposalInit(src)).endCell());
+        },
+        parse: (src) => {
+            return loadSendProposalInit(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type SendUpdateProposal = {
+    $$type: 'SendUpdateProposal';
+    proposalAddress: Address;
+    updateParams: Params;
+}
+
+export function storeSendUpdateProposal(src: SendUpdateProposal) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeUint(2568858687, 32);
+        b_0.storeAddress(src.proposalAddress);
+        b_0.store(storeParams(src.updateParams));
+    };
+}
+
+export function loadSendUpdateProposal(slice: Slice) {
+    const sc_0 = slice;
+    if (sc_0.loadUint(32) !== 2568858687) { throw Error('Invalid prefix'); }
+    const _proposalAddress = sc_0.loadAddress();
+    const _updateParams = loadParams(sc_0);
+    return { $$type: 'SendUpdateProposal' as const, proposalAddress: _proposalAddress, updateParams: _updateParams };
+}
+
+export function loadTupleSendUpdateProposal(source: TupleReader) {
+    const _proposalAddress = source.readAddress();
+    const _updateParams = loadTupleParams(source);
+    return { $$type: 'SendUpdateProposal' as const, proposalAddress: _proposalAddress, updateParams: _updateParams };
+}
+
+export function loadGetterTupleSendUpdateProposal(source: TupleReader) {
+    const _proposalAddress = source.readAddress();
+    const _updateParams = loadGetterTupleParams(source);
+    return { $$type: 'SendUpdateProposal' as const, proposalAddress: _proposalAddress, updateParams: _updateParams };
+}
+
+export function storeTupleSendUpdateProposal(source: SendUpdateProposal) {
+    const builder = new TupleBuilder();
+    builder.writeAddress(source.proposalAddress);
+    builder.writeTuple(storeTupleParams(source.updateParams));
+    return builder.build();
+}
+
+export function dictValueParserSendUpdateProposal(): DictionaryValue<SendUpdateProposal> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeSendUpdateProposal(src)).endCell());
+        },
+        parse: (src) => {
+            return loadSendUpdateProposal(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type Proposal$Data = {
+    $$type: 'Proposal$Data';
+    proposalDeployer: Address;
+    id: bigint;
+    proposalStartTime: bigint;
+    proposalEndTime: bigint;
+    proposalSnapshotTime: bigint;
+    votingSystem: string;
+    votingPowerStrategies: string;
+    title: string;
+    description: string;
+    quorum: string;
+    hide: boolean;
+}
+
+export function storeProposal$Data(src: Proposal$Data) {
+    return (builder: Builder) => {
+        const b_0 = builder;
+        b_0.storeAddress(src.proposalDeployer);
+        b_0.storeUint(src.id, 32);
+        b_0.storeUint(src.proposalStartTime, 64);
+        b_0.storeUint(src.proposalEndTime, 64);
+        b_0.storeUint(src.proposalSnapshotTime, 64);
+        b_0.storeStringRefTail(src.votingSystem);
+        b_0.storeStringRefTail(src.votingPowerStrategies);
+        const b_1 = new Builder();
+        b_1.storeStringRefTail(src.title);
+        b_1.storeStringRefTail(src.description);
+        b_1.storeStringRefTail(src.quorum);
+        b_1.storeBit(src.hide);
+        b_0.storeRef(b_1.endCell());
+    };
+}
+
+export function loadProposal$Data(slice: Slice) {
+    const sc_0 = slice;
+    const _proposalDeployer = sc_0.loadAddress();
+    const _id = sc_0.loadUintBig(32);
+    const _proposalStartTime = sc_0.loadUintBig(64);
+    const _proposalEndTime = sc_0.loadUintBig(64);
+    const _proposalSnapshotTime = sc_0.loadUintBig(64);
+    const _votingSystem = sc_0.loadStringRefTail();
+    const _votingPowerStrategies = sc_0.loadStringRefTail();
+    const sc_1 = sc_0.loadRef().beginParse();
+    const _title = sc_1.loadStringRefTail();
+    const _description = sc_1.loadStringRefTail();
+    const _quorum = sc_1.loadStringRefTail();
+    const _hide = sc_1.loadBit();
+    return { $$type: 'Proposal$Data' as const, proposalDeployer: _proposalDeployer, id: _id, proposalStartTime: _proposalStartTime, proposalEndTime: _proposalEndTime, proposalSnapshotTime: _proposalSnapshotTime, votingSystem: _votingSystem, votingPowerStrategies: _votingPowerStrategies, title: _title, description: _description, quorum: _quorum, hide: _hide };
+}
+
+export function loadTupleProposal$Data(source: TupleReader) {
+    const _proposalDeployer = source.readAddress();
+    const _id = source.readBigNumber();
+    const _proposalStartTime = source.readBigNumber();
+    const _proposalEndTime = source.readBigNumber();
+    const _proposalSnapshotTime = source.readBigNumber();
+    const _votingSystem = source.readString();
+    const _votingPowerStrategies = source.readString();
+    const _title = source.readString();
+    const _description = source.readString();
+    const _quorum = source.readString();
+    const _hide = source.readBoolean();
+    return { $$type: 'Proposal$Data' as const, proposalDeployer: _proposalDeployer, id: _id, proposalStartTime: _proposalStartTime, proposalEndTime: _proposalEndTime, proposalSnapshotTime: _proposalSnapshotTime, votingSystem: _votingSystem, votingPowerStrategies: _votingPowerStrategies, title: _title, description: _description, quorum: _quorum, hide: _hide };
+}
+
+export function loadGetterTupleProposal$Data(source: TupleReader) {
+    const _proposalDeployer = source.readAddress();
+    const _id = source.readBigNumber();
+    const _proposalStartTime = source.readBigNumber();
+    const _proposalEndTime = source.readBigNumber();
+    const _proposalSnapshotTime = source.readBigNumber();
+    const _votingSystem = source.readString();
+    const _votingPowerStrategies = source.readString();
+    const _title = source.readString();
+    const _description = source.readString();
+    const _quorum = source.readString();
+    const _hide = source.readBoolean();
+    return { $$type: 'Proposal$Data' as const, proposalDeployer: _proposalDeployer, id: _id, proposalStartTime: _proposalStartTime, proposalEndTime: _proposalEndTime, proposalSnapshotTime: _proposalSnapshotTime, votingSystem: _votingSystem, votingPowerStrategies: _votingPowerStrategies, title: _title, description: _description, quorum: _quorum, hide: _hide };
+}
+
+export function storeTupleProposal$Data(source: Proposal$Data) {
+    const builder = new TupleBuilder();
+    builder.writeAddress(source.proposalDeployer);
+    builder.writeNumber(source.id);
+    builder.writeNumber(source.proposalStartTime);
+    builder.writeNumber(source.proposalEndTime);
+    builder.writeNumber(source.proposalSnapshotTime);
+    builder.writeString(source.votingSystem);
+    builder.writeString(source.votingPowerStrategies);
+    builder.writeString(source.title);
+    builder.writeString(source.description);
+    builder.writeString(source.quorum);
+    builder.writeBoolean(source.hide);
+    return builder.build();
+}
+
+export function dictValueParserProposal$Data(): DictionaryValue<Proposal$Data> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeProposal$Data(src)).endCell());
+        },
+        parse: (src) => {
+            return loadProposal$Data(src.loadRef().beginParse());
+        }
+    }
+}
+
 export type Registry$Data = {
     $$type: 'Registry$Data';
     registryId: bigint;
@@ -1781,7 +2432,7 @@ function initRegistry_init_args(src: Registry_init_args) {
 }
 
 async function Registry_init(registryId: bigint) {
-    let parsed = Cell.fromBoc(Buffer.from("b5ee9c72410221010008cf000228ff008e88f4a413f4bcf2c80bed5320e303ed43d90109020271020401afbd78af6a268690000cf698fe98ffd20699fe99faaa0360ac71cc08080eb800080e8b846843000000000000000000000000000000000000000000000000000000000000000000241081dcd6500410802faf080716d9e362ac03000a5474325343020120050701afb8181ed44d0d200019ed31fd31ffa40d33fd33f55406c158e39810101d7000101d1708d086000000000000000000000000000000000000000000000000000000000000000000482103b9aca00821005f5e100e2db3c6c5180600022301b3b81c8ed44d0d200019ed31fd31ffa40d33fd33f55406c158e39810101d7000101d1708d086000000000000000000000000000000000000000000000000000000000000000000482103b9aca00821005f5e100e25504db3c6c51808015edb3c705920f90022f9005ad76501d76582020134c8cb17cb0fcb0fcbffcbff71f90400c87401cb0212ca07cbffc9d00e01f83001d072d721d200d200fa4021103450666f04f86102f862ed44d0d200019ed31fd31ffa40d33fd33f55406c158e39810101d7000101d1708d086000000000000000000000000000000000000000000000000000000000000000000482103b9aca00821005f5e100e206925f06e07025d74920c21f953105d31f06de0a03fe218210c95b9b64ba8f6d5b04fa40fa40fa40308200b500f8416f24135f0328bef2f482008a4bf84225c705f2f42410560447135086db3c5c705920f90022f9005ad76501d76582020134c8cb17cb0fcb0fcbffcbff71f90400c87401cb0212ca07cbffc9d0821005f5e10070fb02707050ab804051d6c8e0218210a89691190e0b0c00d455308210ecb876eb5005cb1f13cecececb3fc9161059104a103b50b21036453304c8cf8580ca00cf8440ce01fa028069cf40025c6e016eb0935bcf819d58cf8680cf8480f400f400cf81e2f400c901fb00a44443c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed5404feba8e295f0303d33f308111f8f84225c705f2f4440302c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed54e021820b964bceba8e2a5b3503d33f308200daccf84225c705f2f4443012c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed54e02182105815bd86bae302218210c6d673cabae302218210946a98b6bae3020d1e1f2002fe5b04d31fd33f308121c5f84224c705f2f4104510344366db3c705920f90022f9005ad76501d76582020134c8cb17cb0fcb0fcbffcbff71f90400c87401cb0212ca07cbffc9d0821005f5e10070fb027070804009c8018210f4f3a60258cb1fcb3fc91034413019146d50436d5033c8cf8580ca00cf8440ce01fa028069cf400e1d010af82801db3c0f011e88c87001ca005a02ce810101cf00c910022cff008e88f4a413f4bcf2c80bed53208e8130e1ed43d91113026fa64bc57b51343480006386be903e903e9034c7f500743e9034cfcc0409840944090408db05a3a2fe9020404075c01640b44078b6cf1b19a01412000c54745354745304ec01d072d721d200d200fa4021103450666f04f86102f862ed44d0d200018e1afa40fa40fa40d31fd401d0fa40d33f3010261025102410236c168e8bfa40810101d7005902d101e207925f07e07026d74920c21f953106d31f07de218210ecb876ebbae302218210c2b41d43bae302218210d0e3be76ba1415161700ee8d08600000000000000000000000000000000000000000000000000000000000000000048d08600000000000000000000000000000000000000000000000000000000000000000048d086000000000000000000000000000000000000000000000000000000000000000000441401382238d7ea4c6800000c210345f043402fa40fa40fa40d33f30810ba18d086000000000000000000000000000000000000000000000000000000000000000000416c70515f2f481114df84226c705f2f44503c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54005c5b05fa403081114df8425006c70515f2f410355512c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed5403fa8e2d5b3204fa403081114df84225c705f2f410354413c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54e0218210da2f907fba8e2d5f0304fa403081114df84225c705f2f410354403c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54e0218210f4f3a602bae3022182106a11c484bae3022118191b005c5b3604d33f308200cab5f84224c705f2f410354430c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed5401f45b05810101d700f404f404f404810101d700fa40d20055603781114df8422cc705917f95f8422ac705e2f2f48200eb0df8416f24135f032ebef2f4821005f5e10070fb025505c8cf8580ca00cf8440ce01fa028069cf40025c6e016eb0935bcf819d58cf8680cf8480f400f400cf81e2f400c901fb00103555121a0032c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed5401de8210946a98b6ba8e565b05d33f30c8018210aff90f5758cb1fcb3fc910461035443012f84270705003804201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54e037c00006c12116b0e3025f06f2c0821c003a10355512c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54006e025c6e016eb0935bcf819d58cf8680cf8480f400f400cf81e2f400c901fb005503c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed5400aa5b04fa4030815b9cf84223c70592327f8e278d086000000000000000000000000000000000000000000000000000000000000000000413c705e212f2f44034c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed5400a05b04d33f30c8018210aff90f5758cb1fcb3fc910354430f84270705003804201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed54005036c00005c12115b08e184034c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed54e05f05f2c08232ddfd7b", "hex"));
+    let parsed = Cell.fromBoc(Buffer.from("b5ee9c7241024001000ffa000228ff008e88f4a413f4bcf2c80bed5320e303ed43d90109020271020401afbd78af6a268690000cf698fe98ffd20699fe99faaa0360ac71cc08080eb800080e8b846843000000000000000000000000000000000000000000000000000000000000000000241081dcd6500410802faf080716d9e362ac03000a5474325343020120050701afb8181ed44d0d200019ed31fd31ffa40d33fd33f55406c158e39810101d7000101d1708d086000000000000000000000000000000000000000000000000000000000000000000482103b9aca00821005f5e100e2db3c6c5180600022301b3b81c8ed44d0d200019ed31fd31ffa40d33fd33f55406c158e39810101d7000101d1708d086000000000000000000000000000000000000000000000000000000000000000000482103b9aca00821005f5e100e25504db3c6c51808015edb3c705920f90022f9005ad76501d76582020134c8cb17cb0fcb0fcbffcbff71f90400c87401cb0212ca07cbffc9d00e01f83001d072d721d200d200fa4021103450666f04f86102f862ed44d0d200019ed31fd31ffa40d33fd33f55406c158e39810101d7000101d1708d086000000000000000000000000000000000000000000000000000000000000000000482103b9aca00821005f5e100e206925f06e07025d74920c21f953105d31f06de0a03fe218210c95b9b64ba8f6d5b04fa40fa40fa40308200b500f8416f24135f0328bef2f482008a4bf84225c705f2f42410560447135086db3c5c705920f90022f9005ad76501d76582020134c8cb17cb0fcb0fcbffcbff71f90400c87401cb0212ca07cbffc9d0821005f5e10070fb02707050ab804051d6c8e0218210a89691190e0b0c00d455308210ecb876eb5005cb1f13cecececb3fc9161059104a103b50b21036453304c8cf8580ca00cf8440ce01fa028069cf40025c6e016eb0935bcf819d58cf8680cf8480f400f400cf81e2f400c901fb00a44443c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed5404feba8e295f0303d33f308111f8f84225c705f2f4440302c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed54e021820b964bceba8e2a5b3503d33f308200daccf84225c705f2f4443012c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed54e02182105815bd86bae302218210c6d673cabae302218210946a98b6bae3020d3d3e3f02fe5b04d31fd33f308121c5f84224c705f2f4104510344366db3c705920f90022f9005ad76501d76582020134c8cb17cb0fcb0fcbffcbff71f90400c87401cb0212ca07cbffc9d0821005f5e10070fb027070804009c8018210f4f3a60258cb1fcb3fc91034413019146d50436d5033c8cf8580ca00cf8440ce01fa028069cf400e3c010af82801db3c0f011e88c87001ca005a02ce810101cf00c910022cff008e88f4a413f4bcf2c80bed53208e8130e1ed43d91113026fa64bc57b51343480006386be903e903e9034c7f500743e9034cfcc0409840944090408db05a3a2fe9020404075c01640b44078b6cf1b19a01412000c54745354745304ec01d072d721d200d200fa4021103450666f04f86102f862ed44d0d200018e1afa40fa40fa40d31fd401d0fa40d33f3010261025102410236c168e8bfa40810101d7005902d101e207925f07e07026d74920c21f953106d31f07de218210ecb876ebbae302218210c2b41d43bae302218210d0e3be76ba1415161700ee8d08600000000000000000000000000000000000000000000000000000000000000000048d08600000000000000000000000000000000000000000000000000000000000000000048d086000000000000000000000000000000000000000000000000000000000000000000441401382238d7ea4c6800000c210345f043402fa40fa40fa40d33f30810ba18d086000000000000000000000000000000000000000000000000000000000000000000416c70515f2f481114df84226c705f2f44503c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54005c5b05fa403081114df8425006c70515f2f410355512c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed5403fa8e2d5b3204fa403081114df84225c705f2f410354413c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54e0218210da2f907fba8e2d5f0304fa403081114df84225c705f2f410354403c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54e0218210f4f3a602bae30221821048b5b2a3bae3022118193a005c5b3604d33f308200cab5f84224c705f2f410354430c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed5402bc5b05d33fd33fd33fd401d001d401d001d401d0d401d001d401d001d401d001d20030104910481047104610453981114df8422ec705917f95f8422cc705e2f2f48200eb0df8416f24135f035610bef2f4821005f5e10070fb02f828db3c5c1a37011488c87001ca005801cec91b0228ff008e88f4a413f4bcf2c80bed5320e303ed43d91c240202711d2202016e1e20013bb3e0bb513434800065fe9034c7d65b04a5be900040745c389636cf1b08601f015edb3c705920f90022f9005ad76501d76582020134c8cb17cb0fcb0fcbffcbff71f90400c87401cb0212ca07cbffc9d0260139b32e7b513434800065fe9034c7d65b04a5be900040745c38b6cf1b0860210002200139bf17cf6a268690000cbfd20698facb6094b7d200080e8b8716d9e3610c2300022103f63001d072d721d200d200fa4021103450666f04f86102f862ed44d0d2000197fa40d31f596c1296fa400101d170e203925f03e07022d74920c21f953102d31f03de2182105938a1cbbae302218210991dac3fbae302218210946a98b6bae30233c00002c12112b09e01c87f01ca005902cecb1fc9ed54e05bf2c08225343602f65b01d33fd33fd33fd401d001d401d001d401d0d401d001d401d001d401d001d20030104910481047104610453981345bf8422bc705f2f45419a0db3c5c705920f90022f9005ad76501d76582020134c8cb17cb0fcb0fcbffcbff71f90400c87401cb0212ca07cbffc9d0821005f5e10070fb02105a10491038476a2632010af82801db3c27011e88c87001ca005a02ce810101cf00c9280228ff008e88f4a413f4bcf2c80bed5320e303ed43d9292b01bba64bc57b5134348000638cbe9034c7f4cff4cff4cff50074007500743500740075007400750074007500740074800c0416c416841644160415c4159b06e3867e9020404075c01640b4405c14c022c222c222c222c222c21c38b6cf1b2ee02a0016547a98547a98547a9853a901f63001d072d721d200d200fa4021103450666f04f86102f862ed44d0d200018e32fa40d31fd33fd33fd33fd401d001d401d0d401d001d401d001d401d001d401d001d20030105b105a10591058105710566c1b8e19fa40810101d7005902d1017053008b088b088b088b088b0870e20c925f0ce00ad70d1ff2e082212c04fe82103c1d6b5cba8ee03b5f053604d33fd33fd33fd401d001d401d001d401d0d401d001d401d001d401d001d200301049104810471046104539810ba10ac000930cc000923c70e2930cc000923c70e218f2f481114df8422ac705f2f4108a1079104810374614403305e02182107c420ea2bae30221821030b5d88cbae302012f2d2e30009a5b8200cc6ef82328be94f82327bb9170e2f2f4108a5517c87f01ca0055a050abce18cb1f16cb3f14cb3f12cb3f01c8cecdc802c8ce12cd02c8ce12cd02c8ce12cd02c8ce12cd12ca00cdc9ed5401d23b5f053604d33fd33fd33fd401d001d401d001d401d0d401d001d401d001d401d001d2003010491048104710461045398200ef5e2ac300930dc300923d70e2930dc300923d70e21cf2f481114df8422bc705f2f48122dbf8235009bb18f2f4108a10791048553343002f006cc87f01ca0055a050abce18cb1f16cb3f14cb3f12cb3f01c8cecdc802c8ce12cd02c8ce12cd02c8ce12cd02c8ce12cd12ca00cdc9ed54011c8210946a98b6bae3025f0cf2c0823100f4d33f30c8018210aff90f5758cb1fcb3fc9109b108a107910681057104610354430f84270705003804201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00c87f01ca0055a050abce18cb1f16cb3f14cb3f12cb3f01c8cecdc802c8ce12cd02c8ce12cd02c8ce12cd02c8ce12cd12ca00cdc9ed5401fa8209312d007050ef700ec8558082103c1d6b5c500acb1f095089cb3f16cb3f14cb3f02c8ce12cd01c8cecdc802c8ce12cd02c8ce12cd02c8ce12cd12ca00cdc910565e341037591036453304c8cf8580ca00cf8440ce01fa028069cf40025c6e016eb0935bcf819d58cf8680cf8480f400f400cf81e2f400c901fb00a433001ac87f01ca005902cecb1fc9ed54019a5b01fa40d33fd33fd33fd401d001d401d001d401d0d401d001d401d001d401d001d2003010491048104710461045398200c426f8422cc705f2f4821005f5e10070fb0255517070509880400bc83500f85580821030b5d88c500acb1f095089cb3f16cb3f14cb3f02c8ce12cd01c8cecdc802c8ce12cd02c8ce12cd02c8ce12cd12ca00cdc94130146d50436d5033c8cf8580ca00cf8440ce01fa028069cf40025c6e016eb0935bcf819d58cf8680cf8480f400f400cf81e2f400c901fb0001c87f01ca005902cecb1fc9ed5400885b01d33f30c8018210aff90f5758cb1fcb3fc912f84270705003804201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00c87f01ca005902cecb1fc9ed5401fe705920f90022f9005ad76501d76582020134c8cb17cb0fcb0fcbffcbff71f90400c87401cb0212ca07cbffc9d0105a10491038476a707050ba80400ec85580821048b5b2a3500acb1f095089cb3f16cb3f14cb3f02c8ce12cd01c8cecdc802c8ce12cd02c8ce12cd02c8ce12cd12ca00cdc9105610451034591036453304c838019889cf16ca00cf8440ce01fa028069cf40025c6e016eb0935bcf819d58cf8680cf8480f400f400cf81e2f400c901fb0010355512c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed543900016001de8210946a98b6ba8e565b05d33f30c8018210aff90f5758cb1fcb3fc910461035443012f84270705003804201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54e037c00006c12116b0e3025f06f2c0823b003a10355512c87f01ca0055505056ce13cececb1f01c8ce12cb3fcdc9ed54006e025c6e016eb0935bcf819d58cf8680cf8480f400f400cf81e2f400c901fb005503c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed5400aa5b04fa4030815b9cf84223c70592327f8e278d086000000000000000000000000000000000000000000000000000000000000000000413c705e212f2f44034c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed5400a05b04d33f30c8018210aff90f5758cb1fcb3fc910354430f84270705003804201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed54005036c00005c12115b08e184034c87f01ca0055405045cb1f12cb1fcecb3fcb3fc9ed54e05f05f2c0821c890a1f", "hex"));
     if (parsed.length !== 1) {
         throw new Error("Deserialized more than one cell");
     }
@@ -1834,12 +2485,17 @@ export const Registry_errors = {
     4429: { message: "Invalid sender" },
     4600: { message: "Only admin can set the create dao fee" },
     8645: { message: "Only admin can set the dao fwd msg fee" },
+    8923: { message: "Update proposals is possible only before start time" },
+    13403: { message: "only dao can send create proposal message" },
     23452: { message: "Only admin can set new registry admin" },
     35403: { message: "Only admin can deploy dao" },
     46336: { message: "Below min fee for create dao" },
+    50214: { message: "only dao can send update proposal message" },
     51893: { message: "Only registry can change fwd msg fee" },
+    52334: { message: "Incative proposal" },
     56012: { message: "Only admin can set the new dao fwd msg fee" },
     60173: { message: "Below min fee for dao forward message" },
+    61278: { message: "Propsal was not initialized yet" },
 } as const
 
 export const Registry_errors_backward = {
@@ -1883,12 +2539,17 @@ export const Registry_errors_backward = {
     "Invalid sender": 4429,
     "Only admin can set the create dao fee": 4600,
     "Only admin can set the dao fwd msg fee": 8645,
+    "Update proposals is possible only before start time": 8923,
+    "only dao can send create proposal message": 13403,
     "Only admin can set new registry admin": 23452,
     "Only admin can deploy dao": 35403,
     "Below min fee for create dao": 46336,
+    "only dao can send update proposal message": 50214,
     "Only registry can change fwd msg fee": 51893,
+    "Incative proposal": 52334,
     "Only admin can set the new dao fwd msg fee": 56012,
     "Below min fee for dao forward message": 60173,
+    "Propsal was not initialized yet": 61278,
 } as const
 
 const Registry_types: ABIType[] = [
@@ -1919,9 +2580,19 @@ const Registry_types: ABIType[] = [
     {"name":"SetProposalOwner","header":3504586358,"fields":[{"name":"newProposalOwner","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"SetFwdMsgFee","header":4109608450,"fields":[{"name":"newFwdMsgFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"SetMetadata","header":3660550271,"fields":[{"name":"newMetadata","type":{"kind":"simple","type":"address","optional":false}}]},
-    {"name":"FwdMsg","header":1779549316,"fields":[{"name":"fwdMsg","type":{"kind":"simple","type":"SendParameters","optional":false}}]},
+    {"name":"DeployOrUpdateProposal","header":1219867299,"fields":[{"name":"body","type":{"kind":"simple","type":"Params","optional":false}}]},
     {"name":"DaoInit","header":3971512043,"fields":[{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"proposalOwner","type":{"kind":"simple","type":"address","optional":false}},{"name":"metadata","type":{"kind":"simple","type":"address","optional":false}},{"name":"fwdMsgFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"DaoContractState","header":null,"fields":[{"name":"registry","type":{"kind":"simple","type":"address","optional":false}},{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"proposalOwner","type":{"kind":"simple","type":"address","optional":false}},{"name":"metadata","type":{"kind":"simple","type":"address","optional":false}},{"name":"daoIndex","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"fwdMsgFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
+    {"name":"ProposalDeployer$Data","header":null,"fields":[{"name":"dao","type":{"kind":"simple","type":"address","optional":false}},{"name":"nextProposalId","type":{"kind":"simple","type":"uint","optional":false,"format":32}}]},
+    {"name":"Params","header":null,"fields":[{"name":"proposalStartTime","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"proposalEndTime","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"proposalSnapshotTime","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"votingSystem","type":{"kind":"simple","type":"string","optional":false}},{"name":"votingPowerStrategies","type":{"kind":"simple","type":"string","optional":false}},{"name":"title","type":{"kind":"simple","type":"string","optional":false}},{"name":"description","type":{"kind":"simple","type":"string","optional":false}},{"name":"quorum","type":{"kind":"simple","type":"string","optional":false}},{"name":"hide","type":{"kind":"simple","type":"bool","optional":false}}]},
+    {"name":"ProposalInit","header":1008560988,"fields":[{"name":"body","type":{"kind":"simple","type":"Params","optional":false}}]},
+    {"name":"Vote","header":2084703906,"fields":[{"name":"comment","type":{"kind":"simple","type":"string","optional":false}}]},
+    {"name":"UpdateProposal","header":817223820,"fields":[{"name":"updateParams","type":{"kind":"simple","type":"Params","optional":false}}]},
+    {"name":"ProposalContractState","header":null,"fields":[{"name":"proposalDeployer","type":{"kind":"simple","type":"address","optional":false}},{"name":"id","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"proposalStartTime","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"proposalEndTime","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"proposalSnapshotTime","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"votingSystem","type":{"kind":"simple","type":"string","optional":false}},{"name":"votingPowerStrategies","type":{"kind":"simple","type":"string","optional":false}},{"name":"title","type":{"kind":"simple","type":"string","optional":false}},{"name":"description","type":{"kind":"simple","type":"string","optional":false}},{"name":"quorum","type":{"kind":"simple","type":"string","optional":false}},{"name":"hide","type":{"kind":"simple","type":"bool","optional":false}}]},
+    {"name":"DeployAndInitProposal","header":1496883659,"fields":[{"name":"body","type":{"kind":"simple","type":"Params","optional":false}}]},
+    {"name":"SendProposalInit","header":2746622614,"fields":[{"name":"body","type":{"kind":"simple","type":"Params","optional":false}}]},
+    {"name":"SendUpdateProposal","header":2568858687,"fields":[{"name":"proposalAddress","type":{"kind":"simple","type":"address","optional":false}},{"name":"updateParams","type":{"kind":"simple","type":"Params","optional":false}}]},
+    {"name":"Proposal$Data","header":null,"fields":[{"name":"proposalDeployer","type":{"kind":"simple","type":"address","optional":false}},{"name":"id","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"proposalStartTime","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"proposalEndTime","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"proposalSnapshotTime","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"votingSystem","type":{"kind":"simple","type":"string","optional":false}},{"name":"votingPowerStrategies","type":{"kind":"simple","type":"string","optional":false}},{"name":"title","type":{"kind":"simple","type":"string","optional":false}},{"name":"description","type":{"kind":"simple","type":"string","optional":false}},{"name":"quorum","type":{"kind":"simple","type":"string","optional":false}},{"name":"hide","type":{"kind":"simple","type":"bool","optional":false}}]},
     {"name":"Registry$Data","header":null,"fields":[{"name":"registryId","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"nextDaoId","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"admin","type":{"kind":"simple","type":"address","optional":false}},{"name":"deployAndInitDaoFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newDaosfwdMsgFee","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
 ]
 
@@ -1941,8 +2612,14 @@ const Registry_opcodes = {
     "SetProposalOwner": 3504586358,
     "SetFwdMsgFee": 4109608450,
     "SetMetadata": 3660550271,
-    "FwdMsg": 1779549316,
+    "DeployOrUpdateProposal": 1219867299,
     "DaoInit": 3971512043,
+    "ProposalInit": 1008560988,
+    "Vote": 2084703906,
+    "UpdateProposal": 817223820,
+    "DeployAndInitProposal": 1496883659,
+    "SendProposalInit": 2746622614,
+    "SendUpdateProposal": 2568858687,
 }
 
 const Registry_getters: ABIGetter[] = [
